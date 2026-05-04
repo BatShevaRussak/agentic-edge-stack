@@ -1,0 +1,28 @@
+[project]
+name = "agentic-edge-stack"
+version = "0.1.0"
+description = "Locally hosted agentic AI assistant with RAG and streaming API"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Your Name" }
+]
+license = { text = "MIT" }
+
+dependencies = [
+    "requests>=2.32.3",
+    "pydantic-settings>=2.6.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
