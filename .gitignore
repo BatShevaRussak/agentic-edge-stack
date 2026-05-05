@@ -38,7 +38,10 @@ Thumbs.db
 # Project specific
 data/cache/
 
-# Local model files (too large for git; downloaded by deploy.sh)
+# Local model files (too large for git)
 models/
 model_import/
 *.gguf
+
+# Internal handoff notes (not part of the public deliverable)
+HANDOFF.md

@@ -12,6 +12,10 @@ license = { text = "MIT" }
 dependencies = [
     "requests>=2.32.3",
     "pydantic-settings>=2.6.1",
+    "sentence-transformers>=3.0.0",
+    "faiss-cpu>=1.8.0",
+    "langchain-text-splitters>=0.3.0",
+    "numpy>=1.26.0",
 ]
 
 [project.optional-dependencies]

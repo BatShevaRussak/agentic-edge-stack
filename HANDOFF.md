@@ -113,44 +113,112 @@ Internet:   SLOW & UNSTABLE (~104 KB/s - 1 MB/s, drops mid-download)
 ### 7. מיקום הפרויקט: `C:\Users\user\Desktop\agentic-edge-stack`
 **רציונל:** נוח לגישה, יש מקום פנוי על C: (159GB).
 
+### 8. מודל Embedding: **`BAAI/bge-small-en-v1.5`** (לא `all-MiniLM-L6-v2`)
+**רציונל:**
+- שני המודלים מותרים במשימה כדוגמאות.
+- שניהם 384-dim, ~150MB בזיכרון, מהירים על CPU.
+- BGE-small מקבל ~62.2 על MTEB, MiniLM-L6-v2 מקבל ~56.3 - הפרש משמעותי באיכות retrieval.
+- מראה judgment בראיון: "בחרתי את החזק יותר באותו class גודל".
+- Pooling: BGE משתמש ב-**CLS token** (לא mean) - גילינו זאת מ-`1_Pooling/config.json` של המודל.
+
+### 9. Vector Store: **FAISS `IndexFlatIP`** (לא ChromaDB, לא HNSW)
+**רציונל:**
+- N קטן (60 chunks) - brute-force exact עדיף על approximate.
+- IVF/HNSW מתחילים להשתלם רק מ-10K+ וקטורים.
+- וקטורים מנורמלים L2 → inner product = cosine similarity (טריק סטנדרטי, חוסך אינדקס cosine ייעודי).
+- ChromaDB יותר high-level אבל מוסיף תלויות (sqlite, posthog) ופחות "מרשים" ב-context של ML Systems Engineer.
+
+### 10. Chunking: **`RecursiveCharacterTextSplitter`** עם separators מודעים ל-Markdown
+**רציונל:**
+- עוצר קודם על `\n## ` (כותרות), אחר כך `\n### `, אחר כך פסקאות, אחר כך משפטים.
+- שומר על קוהרנטיות סמנטית של כל chunk.
+- 500 תווים / 50 חפיפה - חלון יציב למודל BGE (שמכבד עד 512 tokens).
+
+### 11. Cache טרנספרנטי לאינדקס
+**רציונל:**
+- אינדקס FAISS + chunks נשמרים ל-`data/cache/`.
+- Manifest עם SHA-256 של תוכן הקורפוס + שם המודל + dim.
+- כל שינוי ב-`data/` או החלפת מודל → cache invalidation אוטומטי.
+- תוצאה: ריצה ראשונה ~5s, ריצה חוזרת ~0.4s (פי 15).
+
+### 12. רשת חסומה (NetFree) - פתרון Path B מקביל ל-Llama
+**רציונל:**
+- HuggingFace החדש משתמש ב-`transfer.xethub.hf.co` שחסום.
+- גם direct download מ-`huggingface.co` עובר SSL handshake timeout.
+- כתבנו `scripts/import_embed_model.ps1` שמוריד את 10 הקבצים ב-`Invoke-WebRequest`.
+- במקרה החסום במיוחד - העברה ידנית ממחשב פתוח (כמו שעשינו עם Llama).
+- ב-`.env` הגדרנו `EMBED_MODEL_NAME=./models/bge-small-en-v1.5` (נתיב מקומי) - SentenceTransformer טוען מהדיסק בלי נגיעה ברשת.
+
 ---
 
-## מבנה הפרויקט (כפי שנוצר)
+## מבנה הפרויקט (לאחר Part 2)
 
 ```
 C:\Users\user\Desktop\agentic-edge-stack\
 │
 ├── app/                            # קוד האפליקציה
-│   ├── __init__.py                 # ריק (מסמן package)
+│   ├── core/
+│   │   └── config.py               # Pydantic Settings - מורחב עם הגדרות RAG
 │   │
-│   ├── core/                       # תשתית רוחבית
-│   │   ├── __init__.py             # ריק
-│   │   └── config.py               # Pydantic Settings - מודל, host, timeout
+│   ├── llm/                        # Part 1 (הושלם)
+│   │   ├── ollama_client.py        # OllamaClient (לא השתנה)
+│   │   ├── factory.py              # get_llm_client()
+│   │   └── errors.py               # LLMClientError
 │   │
-│   ├── llm/                        # שכבת LLM (שלב 1) - מומשה!
-│   │   ├── __init__.py             # ריק
-│   │   └── ollama_client.py        # OllamaClient class - 111 שורות
+│   ├── rag/                        # Part 2 (הושלם!)
+│   │   ├── types.py                # Chunk, RetrievalHit, RetrievalResult
+│   │   ├── errors.py               # RAGError, IngestionError, RetrievalError
+│   │   ├── chunker.py              # RecursiveCharacterTextSplitter wrapper
+│   │   ├── embeddings.py           # SentenceTransformer wrapper (BGE)
+│   │   ├── vector_store.py         # FAISS IndexFlatIP + metadata sidecar
+│   │   ├── retriever.py            # Orchestrator + on-disk cache
+│   │   └── prompt_builder.py       # System + context + question prompt
 │   │
-│   ├── rag/                        # שלב 2 - תיקייה ריקה
-│   ├── agent/                      # שלב 3 - תיקייה ריקה
-│   ├── api/                        # שלב 4 - תיקייה ריקה
-│   │   └── routes/                 # תיקייה ריקה
-│   └── schemas/                    # תיקייה ריקה
+│   ├── agent/                      # Part 3 - תיקייה ריקה
+│   ├── api/                        # Part 4 - תיקייה ריקה
+│   └── schemas/                    # Part 5 - תיקייה ריקה
+│
+├── data/                           # Corpus (Part 2)
+│   ├── README.md                   # מסביר את הקורפוס
+│   ├── 01_llama32_model_card.md    # ~1.5 עמ'
+│   ├── 02_faiss_overview.md        # ~1.2 עמ'
+│   ├── 03_sentence_transformers_and_bge.md   # ~1.3 עמ'
+│   ├── 04_ollama_runtime.md        # ~1.2 עמ'
+│   ├── 05_rag_concepts.md          # ~1.5 עמ'
+│   └── cache/                      # gitignored - FAISS index + manifest
+│
+├── models/                         # gitignored
+│   ├── llama-3.2-1b-instruct-q4_k_m.gguf   # ~770 MB (Part 1)
+│   └── bge-small-en-v1.5/                  # ~134 MB (Part 2)
+│       ├── 1_Pooling/config.json
+│       ├── 2_Normalize/             # ריקה (Normalize layer חסר state)
+│       ├── config.json
+│       ├── config_sentence_transformers.json
+│       ├── model.safetensors
+│       ├── modules.json
+│       ├── sentence_bert_config.json
+│       ├── special_tokens_map.json
+│       ├── tokenizer.json
+│       ├── tokenizer_config.json
+│       └── vocab.txt
 │
 ├── tests/
-│   ├── __init__.py                 # ריק
-│   └── verify_ollama.py            # סקריפט אימות - 59 שורות
+│   ├── verify_ollama.py            # Part 1 (לא השתנה)
+│   ├── verify_rag.py               # Part 2 - end-to-end + log
+│   └── logs/                       # Test logs (committed - זה ה-deliverable)
+│       └── rag_run_<timestamp>.txt
 │
 ├── scripts/
-│   ├── deploy.ps1                  # סקריפט פריסה ראשי
-│   └── import_model.ps1            # ייבוא GGUF מקומי ל-Ollama (Path B)
+│   ├── deploy.ps1                  # פריסה ראשונית
+│   ├── import_model.ps1            # ייבוא GGUF ל-Ollama (Path B)
+│   ├── import_embed_model.ps1      # ייבוא BGE מ-HF (Path B מקביל)
+│   └── ingest.py                   # CLI - בנייה/ריענון של אינדקס FAISS
 │
-├── data/                           # שלב 2 - תיקייה ריקה
-│
-├── pyproject.toml                  # תלויות + מטא-דאטה (29 שורות)
-├── .env.example                    # תבנית הגדרות (5 שורות)
-├── .gitignore                      # Git patterns (40 שורות)
-├── README.md                       # תיעוד מלא (90 שורות)
+├── Modelfile                       # Llama 3.2 chat template (Part 1)
+├── pyproject.toml                  # מורחב: sentence-transformers, faiss-cpu, langchain-text-splitters
+├── .env / .env.example             # מורחבים: EMBED_*, RAG_*, DATA_DIR, CACHE_DIR
+├── .gitignore                      # כולל models/, data/cache/, *.gguf
+├── README.md                       # מורחב: סקציה ל-Part 2 + design notes
 └── HANDOFF.md                      # המסמך הזה
 ```
 
@@ -338,22 +406,40 @@ Get-NetFirewallProfile                    # Firewall enabled (לא חוסם HTTP
 - [x] `llama3.2:1b` רשום ב-Ollama (807 MB).
 - [x] `verify_ollama.py` עובר - "Hello World" עובד.
 
-### צעד 1 (עכשיו): GitHub
-1. ליצור repo פומבי בגיטהאב (אם עוד לא נעשה).
+### ✅ Part 2 (הושלם!)
+- [x] קורפוס של 5 מסמכי Markdown תחת `data/` (~6.7 עמ' טכניים).
+- [x] תלויות חדשות ב-`pyproject.toml`: `sentence-transformers`, `faiss-cpu`, `langchain-text-splitters`, `numpy`.
+- [x] 7 מודולים ב-`app/rag/` (types, errors, chunker, embeddings, vector_store, retriever, prompt_builder).
+- [x] `app/core/config.py` הורחב עם הגדרות RAG (chunk size, top-K, threshold, model, dirs).
+- [x] `scripts/import_embed_model.ps1` - הורדה אוטומטית של BGE מ-HF (Path A).
+- [x] BGE-small-en-v1.5 הועבר ידנית ל-`models/bge-small-en-v1.5/` (Path B - בגלל NetFree).
+- [x] `scripts/ingest.py` - CLI לבניית אינדקס FAISS עם cache.
+- [x] `tests/verify_rag.py` - מריץ 6 שאילתות (5 in-domain + 1 OOD), מדפיס trace, שומר לוג ל-`tests/logs/`.
+- [x] **לוג הריצה האחרונה**: `tests/logs/rag_run_20260505T105750Z.txt` - 5 שאילתות in-domain עם ציוני 0.75-0.86, OOD עם 0 hits ותשובת fallback.
+- [x] README.md מורחב עם סקציה Part 2 + design notes.
+
+### עכשיו: צעד GitHub (אם עוד לא בוצע)
+1. ליצור repo פומבי בגיטהאב.
 2. `git remote add origin <url>`.
-3. `git push -u origin main`.
+3. `git add . && git commit -m "Part 2: in-memory FAISS RAG over BGE embeddings" && git push -u origin main`.
 
-### צעד 2: התחלת Part 2 - RAG
-- ליצור dataset של 2-10 עמודי טקסט טכני (תיקיית `data/`).
-- להוסיף תלויות ל-`pyproject.toml`: `langchain`, `sentence-transformers`, `faiss-cpu`.
-- לכתוב:
-  - `app/rag/embeddings.py` - עטיפה ל-`all-MiniLM-L6-v2`.
-  - `app/rag/vector_store.py` - FAISS in-memory.
-  - `app/rag/retriever.py` - top-3 retrieval.
+> שים/י לב: `models/`, `data/cache/`, ו-`.env` ב-gitignore. ה-corpus תחת `data/*.md` וה-test log תחת `tests/logs/` **כן** מועלים - הם חלק מה-deliverable של Part 2.
 
-### צעד 3-4: Part 3 (Agent) ו-Part 4 (FastAPI + SSE)
+### צעד הבא: Part 3 - Agentic Orchestrator
+- לעטוף את `Retriever.retrieve()` ככלי (Tool) בסכמה שמובנת ל-LangChain / LangGraph.
+- Loop של agent שמחליט **מתי** להפעיל retrieval (לא תמיד) לפי השאילתה.
+- Trace שמדגים turn אחד שכלל קריאה לכלי + שילוב התוצאה במענה.
+- אופציה: לכתוב agent מינימלי משלנו (ReAct loop ידני) במקום LangChain - יותר שקוף, פחות תלויות, מרשים בראיון.
 
-### צעד 5: בונוסים (לפי הזמן)
+### צעד 4: Part 4 - FastAPI + SSE Streaming
+- Endpoint `/chat` שמקבל query + chat_history.
+- מפעיל את ה-agent מ-Part 3.
+- מחזיר Server-Sent Events של tokens תוך כדי generation (משתמש ב-`OllamaClient.generate_stream` הקיים).
+
+### צעד 5: בונוסים (לפי זמן שנותר)
+1. **Structured Output** - Pydantic schema עבור תשובות מובנות (לדוגמה: `{"answer": str, "sources": list[str]}`).
+2. **Quantization Profiling** - השוואה Q4_K_M vs Q5_K_M vs FP16 (אם נצליח להוריד נוסף): TPS, RAM, איכות.
+3. **Production-Grade Vector DB** - הרצת Qdrant על k3s/minikube עם אותו corpus.
 
 ---
 

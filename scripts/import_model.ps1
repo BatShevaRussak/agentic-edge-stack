@@ -3,24 +3,23 @@
     Imports a local GGUF model file into Ollama (offline alternative to `ollama pull`).
 
 .DESCRIPTION
-    Used when `ollama pull` is blocked by network filtering / restrictions.
-    The GGUF file is provided manually (e.g. transferred via Jumbo Mail), then
-    this script:
-      1. Locates the source GGUF file (defaults to ~/Downloads).
+    Useful for air-gapped or offline deployments where `ollama pull` is
+    not an option. The GGUF file is supplied manually, then this script:
+      1. Locates the source GGUF (defaults to ~/Downloads).
       2. Copies it into the project's models/ folder under a normalized name.
       3. Runs `ollama create` against the project's Modelfile.
       4. Verifies the model appears in `ollama list`.
 
-    The Modelfile in the repo root provides the official Llama 3.2 chat template
-    and stop tokens, ensuring identical behavior to `ollama pull llama3.2:1b`.
+    The Modelfile in the repo root provides the official Llama 3.2 chat
+    template and stop tokens, so the imported model behaves identically
+    to one fetched via `ollama pull llama3.2:1b`.
 
 .PARAMETER SourcePath
-    Full path to the source .gguf file. Defaults to the file we requested via
-    Jumbo Mail in the user's Downloads folder.
+    Full path to the source .gguf file. Defaults to the standard
+    Llama-3.2-1B-Instruct-Q4_K_M filename in the user's Downloads folder.
 
 .PARAMETER ModelName
-    The Ollama tag to register the model under. Defaults to llama3.2:1b
-    (matches OLLAMA_MODEL in .env.example).
+    The Ollama tag to register the model under. Defaults to llama3.2:1b.
 
 .EXAMPLE
     .\scripts\import_model.ps1
@@ -28,7 +27,7 @@
 #>
 
 param(
-    [string]$SourcePath = "$env:USERPROFILE\Downloads\Llama-3.2-1B-Instruct-Q4_K_M (1).gguf",
+    [string]$SourcePath = "$env:USERPROFILE\Downloads\Llama-3.2-1B-Instruct-Q4_K_M.gguf",
     [string]$ModelName = "llama3.2:1b"
 )
 

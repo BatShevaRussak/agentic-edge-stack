@@ -1,0 +1,300 @@
+
+======================================================================
+RAG PIPELINE VERIFICATION
+======================================================================
+Timestamp:        2026-05-05T21:21:19.460154+00:00
+Embed model:      ./models/bge-small-en-v1.5
+Embed dimension:  384
+Chunk size:       500
+Chunk overlap:    50
+Top-K:            3
+Score threshold:  0.5
+Ollama model:     llama3.2:1b
+Skip LLM:         False
+
+======================================================================
+INGESTION
+======================================================================
+[OK] Indexed 60 chunks in 5.84s (cache_dir=data\cache)
+
+======================================================================
+DEMO QUERIES
+======================================================================
+
+----------------------------------------------------------------------
+QUERY: What quantization format is the deployed Llama 3.2 model shipped in, and what is the size/quality tradeoff?
+----------------------------------------------------------------------
+Retrieved 3 chunks in 33.5 ms
+  #1  score=0.8035  source=data/01_llama32_model_card.md  chunk=9
+        ## Quantization in deployment The weights shipped through Ollama are in GGUF Q4_K_M format - a 4-bit K-quant that compresses the model from ~2.5 GB (FP16) down to ~770 MB while preserving most of the quality on standard benchmarks. Q4_K_...
+  #2  score=0.7681  source=data/README.md  chunk=2
+        | File | Topic | ~Pages | |------|-------|--------| | `01_llama32_model_card.md` | Meta Llama 3.2 1B Instruct - architecture, training, intended use, limitations | 1.5 | | `02_faiss_overview.md` | FAISS index families (Flat / IVF / HNSW)...
+  #3  score=0.7505  source=data/01_llama32_model_card.md  chunk=1
+        ## Architecture The model is a decoder-only Transformer with the same backbone as the larger Llama 3 models, scaled down. Key architectural facts:
+
+AUGMENTED PROMPT (sent to LLM):
+  | You are a precise technical assistant. Answer the user's question using ONLY the information in the CONTEXT below. Quote facts faithfully and cite sources by their bracketed number (e.g. [1]). If the answer is not present in the context, reply exactly: "I don't have that information in my knowledge base." Do not invent facts.
+  | 
+  | CONTEXT:
+  | [1] data/01_llama32_model_card.md
+  | ## Quantization in deployment
+  | 
+  | The weights shipped through Ollama are in GGUF Q4_K_M format - a
+  | 4-bit K-quant that compresses the model from ~2.5 GB (FP16) down to
+  | ~770 MB while preserving most of the quality on standard benchmarks.
+  | Q4_K_M is widely regarded as the best size/quality tradeoff for small
+  | Llama models on CPU. See `04_ollama_runtime.md` for details on GGUF
+  | and the K-quant scheme.
+  | 
+  | [2] data/README.md
+  | | File | Topic | ~Pages |
+  | |------|-------|--------|
+  | | `01_llama32_model_card.md` | Meta Llama 3.2 1B Instruct - architecture, training, intended use, limitations | 1.5 |
+  | | `02_faiss_overview.md` | FAISS index families (Flat / IVF / HNSW), exact vs approximate search, when to use each | 1.2 |
+  | | `03_sentence_transformers_and_bge.md` | Sentence embeddings, BGE vs MiniLM, normalization, MTEB benchmark | 1.3 |
+  | 
+  | [3] data/01_llama32_model_card.md
+  | ## Architecture
+  | 
+  | The model is a decoder-only Transformer with the same backbone as the
+  | larger Llama 3 models, scaled down. Key architectural facts:
+  | 
+  | QUESTION: What quantization format is the deployed Llama 3.2 model shipped in, and what is the size/quality tradeoff?
+  | 
+  | ANSWER:
+
+LLM ANSWER (29.73s):
+  > [1] data/01_llama32_model_card.md
+  > ## Architecture
+  > 
+  > The model is a decoder-only Transformer with the same backbone as the larger Llama 3 models, scaled down.
+  > 
+  > According to [2], this model is shipped in Q4_K_M format - a 4-bit K-quant that compresses the model from ~2.5 GB (FP16) down to ~770 MB while preserving most of the quality on standard benchmarks.
+
+----------------------------------------------------------------------
+QUERY: How does FAISS compute cosine similarity, and why does this project use IndexFlatIP?
+----------------------------------------------------------------------
+Retrieved 3 chunks in 46.2 ms
+  #1  score=0.8588  source=data/02_faiss_overview.md  chunk=6
+        ## Cosine similarity via inner product Cosine similarity between two vectors x and y is defined as x . y / (||x|| * ||y||). If both vectors are pre-normalized to unit L2 norm, the denominators become 1 and cosine similarity reduces to th...
+  #2  score=0.8095  source=data/02_faiss_overview.md  chunk=7
+        ## Why IndexFlatIP for this project The corpus is ~50 to 200 chunks. At that scale, brute-force search takes microseconds, so any approximation only adds complexity without real benefit. `IndexFlatIP` over normalized BGE embeddings gives...
+  #3  score=0.8024  source=data/02_faiss_overview.md  chunk=2
+        - **Distance metric.** Inner product (`IndexFlatIP`) or L2 (`IndexFlatL2`). Cosine similarity can be obtained by L2-normalizing vectors and using inner product. - **Search exactness.** Exact search examines every vector; approximate sear...
+
+AUGMENTED PROMPT (sent to LLM):
+  | You are a precise technical assistant. Answer the user's question using ONLY the information in the CONTEXT below. Quote facts faithfully and cite sources by their bracketed number (e.g. [1]). If the answer is not present in the context, reply exactly: "I don't have that information in my knowledge base." Do not invent facts.
+  | 
+  | CONTEXT:
+  | [1] data/02_faiss_overview.md
+  | ## Cosine similarity via inner product
+  | 
+  | Cosine similarity between two vectors x and y is defined as
+  | x . y / (||x|| * ||y||). If both vectors are pre-normalized to unit
+  | L2 norm, the denominators become 1 and cosine similarity reduces to
+  | the plain inner product x . y. FAISS therefore does not provide a
+  | dedicated cosine index - the standard pattern is to L2-normalize
+  | vectors before insertion and use `IndexFlatIP`. This is the approach
+  | this project uses.
+  | 
+  | [2] data/02_faiss_overview.md
+  | ## Why IndexFlatIP for this project
+  | 
+  | The corpus is ~50 to 200 chunks. At that scale, brute-force search
+  | takes microseconds, so any approximation only adds complexity without
+  | real benefit. `IndexFlatIP` over normalized BGE embeddings gives
+  | exact cosine search with zero tuning and a single line of code per
+  | operation. Approximate indexes (IVF, HNSW) start to pay off at
+  | roughly 10,000+ vectors, well above the size of an in-memory RAG
+  | corpus.
+  | 
+  | [3] data/02_faiss_overview.md
+  | - **Distance metric.** Inner product (`IndexFlatIP`) or L2
+  |   (`IndexFlatL2`). Cosine similarity can be obtained by L2-normalizing
+  |   vectors and using inner product.
+  | - **Search exactness.** Exact search examines every vector; approximate
+  |   search trades a small recall loss for large speedups.
+  | - **Memory layout.** Vectors can be stored as full floats, scalar
+  |   quantized, or product quantized for compression.
+  | 
+  | QUESTION: How does FAISS compute cosine similarity, and why does this project use IndexFlatIP?
+  | 
+  | ANSWER:
+
+LLM ANSWER (28.03s):
+  > According to the context, FAISS computes cosine similarity between two vectors using the inner product of their pre-normalized vectors. Specifically:
+  > 
+  > * Cosine similarity is defined as [1]x . y / (||x|| * ||y||).
+  > * The standard pattern for FAISS is to use IndexFlatIP, which implies that cosine similarity is computed using the inner product.
+  > 
+  > Therefore, FAISS uses IndexFlatIP because it provides exact cosine search with zero tuning and a single line of code per operation, making it more efficient than approximate indexes like IVF or HNSW at large scales.
+
+----------------------------------------------------------------------
+QUERY: Why was BGE-small chosen over all-MiniLM-L6-v2 as the embedding model?
+----------------------------------------------------------------------
+Retrieved 3 chunks in 31.7 ms
+  #1  score=0.8621  source=data/03_sentence_transformers_and_bge.md  chunk=4
+        ## BGE-small vs MiniLM-L6 Both models are popular choices for local CPU-bound RAG. They are compared on the MTEB (Massive Text Embedding Benchmark) leaderboard, which aggregates 56 retrieval, classification, and clustering tasks: | Model...
+  #2  score=0.8446  source=data/03_sentence_transformers_and_bge.md  chunk=3
+        ## BGE - BAAI General Embedding BGE is a family of embedding models published by the Beijing Academy of Artificial Intelligence (BAAI) starting in mid-2023. The v1.5 revision improved retrieval quality and reduced sensitivity to query ph...
+  #3  score=0.7733  source=data/03_sentence_transformers_and_bge.md  chunk=5
+        A six-point gap on MTEB is substantial - it corresponds roughly to moving from a small model to a model 5-10x larger in older benchmarks. Inference cost is similar (both fit in under 150 MB and run at hundreds of sentences per second on ...
+
+AUGMENTED PROMPT (sent to LLM):
+  | You are a precise technical assistant. Answer the user's question using ONLY the information in the CONTEXT below. Quote facts faithfully and cite sources by their bracketed number (e.g. [1]). If the answer is not present in the context, reply exactly: "I don't have that information in my knowledge base." Do not invent facts.
+  | 
+  | CONTEXT:
+  | [1] data/03_sentence_transformers_and_bge.md
+  | ## BGE-small vs MiniLM-L6
+  | 
+  | Both models are popular choices for local CPU-bound RAG. They are
+  | compared on the MTEB (Massive Text Embedding Benchmark) leaderboard,
+  | which aggregates 56 retrieval, classification, and clustering tasks:
+  | 
+  | | Model | Params | Dim | MTEB avg |
+  | |-------|--------|-----|----------|
+  | | `sentence-transformers/all-MiniLM-L6-v2` | 22M | 384 | ~56.3 |
+  | | `BAAI/bge-small-en-v1.5`                 | 33M | 384 | ~62.2 |
+  | 
+  | [2] data/03_sentence_transformers_and_bge.md
+  | ## BGE - BAAI General Embedding
+  | 
+  | BGE is a family of embedding models published by the Beijing Academy
+  | of Artificial Intelligence (BAAI) starting in mid-2023. The v1.5
+  | revision improved retrieval quality and reduced sensitivity to query
+  | phrasing. The "small" variant has roughly 33 million parameters and
+  | produces 384-dimensional vectors, the same dimension as
+  | `all-MiniLM-L6-v2` but with stronger benchmark performance.
+  | 
+  | [3] data/03_sentence_transformers_and_bge.md
+  | A six-point gap on MTEB is substantial - it corresponds roughly to
+  | moving from a small model to a model 5-10x larger in older
+  | benchmarks. Inference cost is similar (both fit in under 150 MB and
+  | run at hundreds of sentences per second on a single CPU core), so
+  | BGE-small is the better default unless backwards compatibility with
+  | an existing index is required.
+  | 
+  | QUESTION: Why was BGE-small chosen over all-MiniLM-L6-v2 as the embedding model?
+  | 
+  | ANSWER:
+
+LLM ANSWER (25.51s):
+  > [3] data/03_sentence_transformers_and_bge.md
+  > ## BGE - BAAI General Embedding
+  > 
+  > BGE was chosen because it produces 384-dimensional vectors, which is the same dimension as `all-MiniLM-L6-v2` but with stronger benchmark performance.
+  > 
+  > According to [1], which mentions that "both models are popular choices for local CPU-bound RAG", this suggests that BGE was likely selected due to its improved retrieval quality and reduced sensitivity to query phrasing compared to all-MiniLM-L6-v2.
+
+----------------------------------------------------------------------
+QUERY: What chunking strategy does this RAG pipeline use, and what chunk size and overlap are configured?
+----------------------------------------------------------------------
+Retrieved 3 chunks in 34.4 ms
+  #1  score=0.7896  source=data/05_rag_concepts.md  chunk=5
+        ## Chunking strategies Chunk quality dominates retrieval quality. The four common strategies, from simplest to most sophisticated:
+  #2  score=0.7824  source=data/README.md  chunk=3
+        | `04_ollama_runtime.md` | Ollama runtime, GGUF format, K-quants (Q4_K_M), Modelfile templating | 1.2 | | `05_rag_concepts.md` | RAG pipeline, chunking strategies, top-K retrieval, prompt augmentation | 1.5 |
+  #3  score=0.7705  source=data/05_rag_concepts.md  chunk=3
+        ## The pipeline A minimal RAG system has five stages:
+
+AUGMENTED PROMPT (sent to LLM):
+  | You are a precise technical assistant. Answer the user's question using ONLY the information in the CONTEXT below. Quote facts faithfully and cite sources by their bracketed number (e.g. [1]). If the answer is not present in the context, reply exactly: "I don't have that information in my knowledge base." Do not invent facts.
+  | 
+  | CONTEXT:
+  | [1] data/05_rag_concepts.md
+  | ## Chunking strategies
+  | 
+  | Chunk quality dominates retrieval quality. The four common strategies,
+  | from simplest to most sophisticated:
+  | 
+  | [2] data/README.md
+  | | `04_ollama_runtime.md` | Ollama runtime, GGUF format, K-quants (Q4_K_M), Modelfile templating | 1.2 |
+  | | `05_rag_concepts.md` | RAG pipeline, chunking strategies, top-K retrieval, prompt augmentation | 1.5 |
+  | 
+  | [3] data/05_rag_concepts.md
+  | ## The pipeline
+  | 
+  | A minimal RAG system has five stages:
+  | 
+  | QUESTION: What chunking strategy does this RAG pipeline use, and what chunk size and overlap are configured?
+  | 
+  | ANSWER:
+
+LLM ANSWER (20.23s):
+  > According to the context, RAG (Retrieval-as-Search) pipelines typically use a top-K approach for ranking documents. The provided information from [1] states that the four common strategies "from simplest to most sophisticated" include:
+  > 
+  > * 1.2: Ollama runtime, GGUF format, K-quants (Q4_K_M), Modelfile templating
+  > * 1.5: RAG pipeline, chunking strategies, top-K retrieval, prompt augmentation
+  > 
+  > Therefore, the chunking strategy used in this RAG pipeline is likely to be one of these two options, but without more specific information from [2] or [3], I cannot confirm which one.
+
+----------------------------------------------------------------------
+QUERY: What is the role of the Modelfile when running Llama 3.2 on Ollama?
+----------------------------------------------------------------------
+Retrieved 3 chunks in 64.8 ms
+  #1  score=0.7826  source=data/04_ollama_runtime.md  chunk=7
+        For Llama 3.2 the official template uses three pairs of header tokens (`<|start_header_id|>`, `<|end_header_id|>`) and a `<|eot_id|>` end-of-turn marker. Without the correct template, the model produces malformed output and ignores stop ...
+  #2  score=0.7567  source=data/04_ollama_runtime.md  chunk=6
+        ## Modelfile and chat templates A Modelfile is Ollama's equivalent of a Dockerfile. It declares the base GGUF, the chat template, stop tokens, and default sampling parameters. The template is a Go template string that maps the abstract r...
+  #3  score=0.7553  source=data/04_ollama_runtime.md  chunk=1
+        ## What Ollama is Ollama is an open-source local inference server that wraps the `llama.cpp` C++ runtime behind a friendly HTTP API and CLI. It runs on macOS, Linux, and Windows, supports CPU and GPU backends, and hosts a model registry ...
+
+AUGMENTED PROMPT (sent to LLM):
+  | You are a precise technical assistant. Answer the user's question using ONLY the information in the CONTEXT below. Quote facts faithfully and cite sources by their bracketed number (e.g. [1]). If the answer is not present in the context, reply exactly: "I don't have that information in my knowledge base." Do not invent facts.
+  | 
+  | CONTEXT:
+  | [1] data/04_ollama_runtime.md
+  | For Llama 3.2 the official template uses three pairs of header
+  | tokens (`<|start_header_id|>`, `<|end_header_id|>`) and a
+  | `<|eot_id|>` end-of-turn marker. Without the correct template, the
+  | model produces malformed output and ignores stop tokens, so getting
+  | the Modelfile right is critical for both chat reliability and tool
+  | calling later in Part 3.
+  | 
+  | [2] data/04_ollama_runtime.md
+  | ## Modelfile and chat templates
+  | 
+  | A Modelfile is Ollama's equivalent of a Dockerfile. It declares the
+  | base GGUF, the chat template, stop tokens, and default sampling
+  | parameters. The template is a Go template string that maps the
+  | abstract roles `system`, `user`, and `assistant` onto the special
+  | tokens the model was trained with.
+  | 
+  | [3] data/04_ollama_runtime.md
+  | ## What Ollama is
+  | 
+  | Ollama is an open-source local inference server that wraps the
+  | `llama.cpp` C++ runtime behind a friendly HTTP API and CLI. It runs
+  | on macOS, Linux, and Windows, supports CPU and GPU backends, and
+  | hosts a model registry with one-line pulls. The server listens on
+  | `http://localhost:11434` by default and exposes endpoints that
+  | mirror the OpenAI Chat Completions shape:
+  | 
+  | QUESTION: What is the role of the Modelfile when running Llama 3.2 on Ollama?
+  | 
+  | ANSWER:
+
+LLM ANSWER (23.68s):
+  > I don't have that information in my knowledge base.
+  > 
+  > [1] [3]: The official template uses three pairs of header tokens (`[1]`, `[2]`) and a `[/1]` end-of-turn marker for Llama 3.2 to ensure proper formatting. Without the correct template, the model produces malformed output and ignores stop tokens.
+
+----------------------------------------------------------------------
+QUERY: What is the recommended recipe for a chocolate cake?
+----------------------------------------------------------------------
+Retrieved 0 chunks in 42.0 ms
+(no chunks passed the score threshold of 0.5)
+
+AUGMENTED PROMPT (sent to LLM):
+  | You are a precise technical assistant. The retriever found no relevant context for the user's question. Reply with exactly: "I don't have that information in my knowledge base."
+  | 
+  | Question: What is the recommended recipe for a chocolate cake?
+
+LLM ANSWER (6.32s):
+  > I don't have that information in my knowledge base.
+  > 
+  > Would you like me to suggest some general guidelines or variations on traditional chocolate cake recipes, though?
+
+======================================================================
+DONE
+======================================================================

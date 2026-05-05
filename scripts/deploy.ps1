@@ -65,8 +65,8 @@ $existing = (ollama list | Out-String)
 if ($existing -like "*llama3.2:1b*") {
     Write-Host "  Model already registered - skipping pull.`n" -ForegroundColor Green
 } else {
-    Write-Host "  Model not found locally. Trying 'ollama pull llama3.2:1b'..."
-    Write-Host "  (If your network blocks this, run .\scripts\import_model.ps1 with a local GGUF instead.)"
+    Write-Host "  Model not found locally. Running 'ollama pull llama3.2:1b'..."
+    Write-Host "  (For offline / air-gapped setups, run .\scripts\import_model.ps1 with a local GGUF.)"
     ollama pull llama3.2:1b
     if ($LASTEXITCODE -ne 0) {
         Write-Host "  Model pull failed." -ForegroundColor Red
