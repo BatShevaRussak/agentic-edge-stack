@@ -14,7 +14,7 @@ app/
 ├── core/       # Cross-cutting concerns (Pydantic Settings)
 ├── llm/        # Local Ollama LLM client (Part 1)
 ├── rag/        # In-memory FAISS RAG pipeline (Part 2)
-├── agent/      # Agentic orchestrator (Part 3 - planned)
+├── agent/      # LangGraph agentic orchestrator (Part 3)
 ├── api/        # FastAPI endpoints (Part 4 - planned)
 └── schemas/    # Pydantic request / response models
 ```
@@ -30,6 +30,20 @@ app/rag/
 ├── vector_store.py   # FAISS IndexFlatIP store with metadata sidecar
 ├── retriever.py      # Orchestrator + on-disk cache
 └── prompt_builder.py # Augmented prompt assembly
+```
+
+The `agent/` package follows the same pattern, with the LangGraph
+state machine split across modules of one concern each:
+
+```
+app/agent/
+├── types.py     # AgentState, ToolCall, TraceEvent, AgentResponse
+├── errors.py    # AgentError, RoutingError, ToolExecutionError
+├── prompts.py   # Router prompt, direct prompt, heuristic pre-filter
+├── tools.py     # @tool rag_search + Pydantic args schema
+├── nodes.py     # router / rag / synthesis / direct / fallback nodes
+├── graph.py     # build_agent_graph() - the StateGraph wiring
+└── runner.py    # AgentRunner.run() + trace formatting (text + json)
 ```
 
 ## Requirements
@@ -123,6 +137,22 @@ sent to the LLM, and the LLM's grounded answer.
 
 Pass `--skip-llm` to run retrieval only (useful in CI).
 
+### 6. Verify Part 3
+
+```bash
+python tests\verify_agent.py
+```
+
+`verify_agent.py` exercises every edge of the agent graph with seven
+demo queries (three project-specific that should retrieve, three
+general-knowledge that should answer directly, and one deliberately
+out-of-domain that should route to RAG and fall through to the canonical
+"no information" response). The trace log is written to
+`tests/logs/agent_run_<UTC>.txt` and shows, for every query, the router
+decision (heuristic vs. LLM), the tool call with retrieved chunks and
+cosine scores, the synthesis / direct / fallback output, and per-step
+latency.
+
 ## Configuration
 
 | Variable | Meaning | Default |
@@ -140,6 +170,88 @@ Pass `--skip-llm` to run retrieval only (useful in CI).
 | `CACHE_DIR` | On-disk vector cache | `data/cache` |
 
 See [`.env.example`](.env.example) for the full template.
+
+## Agent design notes
+
+Part 3 wraps the Part 2 RAG pipeline as a tool that an autonomous agent
+can choose to call, exactly as required by the task brief. The agent is
+implemented as a small **LangGraph** state machine - the modern
+replacement for `langchain.AgentExecutor`, which has been deprecated
+since LangChain 0.3.
+
+### Topology
+
+```mermaid
+flowchart LR
+    Start([User Query]) --> Router{router}
+    Router -->|rag| RagSearch[rag_search]
+    Router -->|direct| Direct[direct]
+    RagSearch --> Check{hits > 0?}
+    Check -->|yes| Synthesis[synthesis]
+    Check -->|no| Fallback[fallback]
+    Synthesis --> EndNode([Response])
+    Direct --> EndNode
+    Fallback --> EndNode
+```
+
+Five nodes, two conditional edges. `verify_agent.py` exercises every
+edge.
+
+### Why LangGraph, not LangChain `AgentExecutor`?
+
+`AgentExecutor` and `create_tool_calling_agent` were deprecated in
+LangChain 0.3 and rely on OpenAI-style native function calling, which
+`llama3.2:1b` does not produce reliably. LangGraph keeps the state
+machine explicit, lets us type the state (`AgentState` is a `TypedDict`
+with `Annotated[list, add]` reducers for the trace), and exposes a
+`get_graph().draw_mermaid()` view of the compiled graph - the diagram
+above is generated from the actual edges, not hand-drawn.
+
+### Two-tier router
+
+A 1B-parameter classifier is unreliable at binary tasks: in early runs,
+the LLM router routed *every* query to RAG, regardless of whether the
+question was project-specific. The fix is a small **heuristic
+pre-filter** in [`app/agent/prompts.py`](app/agent/prompts.py) that
+catches arithmetic, translation, and self-identity questions in O(1)
+without an LLM call. Anything ambiguous still goes through the LLM
+router with a six-example few-shot prompt and a defensive parser.
+
+The trace records `method=heuristic` or `method=llm` for every routing
+decision, so the cascade is fully observable.
+
+### LLM-free fallback
+
+When the router chooses RAG but retrieval returns zero chunks above the
+score threshold, the graph routes to `fallback_node`, which returns the
+canonical *"I don't have that information in my knowledge base."*
+string **without** calling the LLM. This saves 5-7 s per dead-end query
+and matches the behaviour of the bare RAG pipeline from Part 2.
+
+### Tool definition
+
+The `rag_search` tool uses the modern `@tool` decorator from
+`langchain-core` with a Pydantic `args_schema`. The function docstring
+*is* the description an LLM-driven router sees, which is why it
+explicitly enumerates the topics the knowledge base covers and the
+topics it does not.
+
+```python
+@tool("rag_search", args_schema=RagSearchInput)
+def rag_search(query: str) -> RetrievalResult:
+    """Search the local technical knowledge base for facts about the
+    deployed Llama 3.2 model, the RAG pipeline (FAISS IndexFlatIP),
+    BGE-small embeddings, the Ollama runtime, or this project's chunking
+    strategy. ..."""
+```
+
+### Trace artefact
+
+Every node emits a single `TraceEvent` with `inputs`, `outputs`, and
+`elapsed_ms`. `format_trace_text` turns an `AgentResponse` into the
+human-readable trace committed under `tests/logs/`, mirroring the Part 2
+RAG log style for easy side-by-side comparison. A second formatter,
+`format_trace_json`, is also available for programmatic consumption.
 
 ## RAG design notes
 
@@ -165,7 +277,7 @@ See [`.env.example`](.env.example) for the full template.
 
 - [x] **Part 1: Model serving & deployment** - Ollama + Llama 3.2 1B (Q4_K_M) via Modelfile import; `verify_ollama.py` "Hello World" passes locally.
 - [x] **Part 2: In-Memory RAG** - FAISS `IndexFlatIP` over BGE-small embeddings; markdown-aware chunking; on-disk cache; `verify_rag.py` produces a per-query trace log under `tests/logs/`.
-- [ ] Part 3: Agentic Orchestrator (LangChain tools)
+- [x] **Part 3: Agentic Orchestrator** - LangGraph state machine with router / rag / synthesis / direct / fallback nodes, `@tool`-decorated `rag_search`, two-tier (heuristic + LLM) router, and dual text + JSON traces under `tests/logs/`.
 - [ ] Part 4: Streaming API (FastAPI + SSE)
 - [ ] Part 5: Bonus tasks (quantization profiling, structured output)
 

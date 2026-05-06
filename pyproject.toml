@@ -16,6 +16,8 @@ dependencies = [
     "faiss-cpu>=1.8.0",
     "langchain-text-splitters>=0.3.0",
     "numpy>=1.26.0",
+    "langgraph>=0.2.50",
+    "langchain-core>=0.3.0",
 ]
 
 [project.optional-dependencies]
