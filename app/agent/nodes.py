@@ -9,7 +9,9 @@ from __future__ import annotations
 import logging
 import time
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, Callable
+
+from langgraph.config import get_stream_writer
 
 from app.agent.errors import ToolExecutionError
 from app.agent.prompts import (
@@ -28,6 +30,40 @@ from app.rag.prompt_builder import build_rag_prompt
 from app.rag.types import RetrievalHit, RetrievalResult
 
 logger = logging.getLogger(__name__)
+
+
+def _stream_llm_tokens(
+    *,
+    llm: OllamaClient,
+    prompt: str,
+    node_name: str,
+    writer: Callable[[dict[str, Any]], None],
+) -> tuple[str, str | None]:
+    """Run ``llm.generate_stream`` while pushing each token to the writer.
+
+    Returns ``(answer, error_message)``. The writer is a no-op when the graph
+    is invoked outside a stream context (e.g. ``AgentRunner.run``); inside
+    ``graph.stream(stream_mode=["updates","custom"])`` each token surfaces as
+    a custom-mode payload that the API translates to an SSE ``token`` event.
+    """
+    chunks: list[str] = []
+    try:
+        for token in llm.generate_stream(prompt):
+            if not token:
+                continue
+            chunks.append(token)
+            writer(
+                {
+                    "type": "token",
+                    "node": node_name,
+                    "value": token,
+                }
+            )
+    except LLMClientError as exc:
+        partial = "".join(chunks).strip()
+        msg = f"[LLM error during {node_name}: {exc}]"
+        return (f"{partial}\n{msg}".strip() if partial else msg, str(exc))
+    return ("".join(chunks).strip(), None)
 
 
 def _utc_now_iso() -> str:
@@ -147,12 +183,17 @@ def rag_node(state: AgentState) -> dict[str, Any]:
 
 
 def synthesis_node(state: AgentState, *, llm: OllamaClient) -> dict[str, Any]:
-    """Generate the final answer from retrieved context (re-uses ``build_rag_prompt``)."""
+    """Generate the final answer from retrieved context (re-uses ``build_rag_prompt``).
+
+    Streams tokens through LangGraph's custom-stream channel so the API layer
+    can push them to the client as SSE ``token`` events. When invoked
+    synchronously (``AgentRunner.run``) the writer is a no-op, so the same
+    code powers both the Part 3 batch trace and the Part 4 streaming API.
+    """
     started_perf = time.perf_counter()
     started_at = _utc_now_iso()
     result: RetrievalResult | None = state.get("retrieved")
     if result is None:
-        # Defensive: the conditional edge should have routed us elsewhere.
         event = _make_event(
             node="synthesis",
             started_at=started_at,
@@ -163,41 +204,44 @@ def synthesis_node(state: AgentState, *, llm: OllamaClient) -> dict[str, Any]:
         return {"answer": FALLBACK_MESSAGE, "trace": [event]}
 
     prompt = build_rag_prompt(result)
-    try:
-        answer = llm.generate(prompt)
-    except LLMClientError as exc:
-        answer = f"[LLM error during synthesis: {exc}]"
+    writer = get_stream_writer()
+    answer, error = _stream_llm_tokens(
+        llm=llm, prompt=prompt, node_name="synthesis", writer=writer
+    )
 
     event = _make_event(
         node="synthesis",
         started_at=started_at,
         started_perf=started_perf,
         inputs={"prompt_chars": len(prompt), "num_hits": len(result.hits)},
-        outputs={"answer_chars": len(answer)},
+        outputs={"answer_chars": len(answer), "error": error},
     )
-    return {"answer": answer.strip(), "trace": [event]}
+    return {"answer": answer, "trace": [event]}
 
 
 def direct_node(state: AgentState, *, llm: OllamaClient) -> dict[str, Any]:
-    """Generate an answer from the LLM's parametric knowledge alone."""
+    """Generate an answer from the LLM's parametric knowledge alone.
+
+    Same streaming contract as ``synthesis_node`` (see its docstring).
+    """
     started_perf = time.perf_counter()
     started_at = _utc_now_iso()
     query = state["query"]
 
     prompt = build_direct_prompt(query)
-    try:
-        answer = llm.generate(prompt)
-    except LLMClientError as exc:
-        answer = f"[LLM error during direct answer: {exc}]"
+    writer = get_stream_writer()
+    answer, error = _stream_llm_tokens(
+        llm=llm, prompt=prompt, node_name="direct", writer=writer
+    )
 
     event = _make_event(
         node="direct",
         started_at=started_at,
         started_perf=started_perf,
         inputs={"query": query, "prompt_chars": len(prompt)},
-        outputs={"answer_chars": len(answer)},
+        outputs={"answer_chars": len(answer), "error": error},
     )
-    return {"answer": answer.strip(), "trace": [event]}
+    return {"answer": answer, "trace": [event]}
 
 
 def fallback_node(state: AgentState) -> dict[str, Any]:

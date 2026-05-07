@@ -15,8 +15,8 @@ app/
 ├── llm/        # Local Ollama LLM client (Part 1)
 ├── rag/        # In-memory FAISS RAG pipeline (Part 2)
 ├── agent/      # LangGraph agentic orchestrator (Part 3)
-├── api/        # FastAPI endpoints (Part 4 - planned)
-└── schemas/    # Pydantic request / response models
+├── api/        # FastAPI + SSE streaming endpoints (Part 4)
+└── schemas/    # Pydantic request / response models (reserved for Part 5)
 ```
 
 The `rag/` package is split into single-responsibility modules:
@@ -44,6 +44,16 @@ app/agent/
 ├── nodes.py     # router / rag / synthesis / direct / fallback nodes
 ├── graph.py     # build_agent_graph() - the StateGraph wiring
 └── runner.py    # AgentRunner.run() + trace formatting (text + json)
+```
+
+The `api/` package wraps the agent in a FastAPI service with SSE streaming:
+
+```
+app/api/
+├── main.py      # create_app(), lifespan singleton AgentRunner, CORS
+├── routes.py    # POST /chat (EventSourceResponse), GET /health
+├── schemas.py   # ChatRequest, HealthResponse Pydantic models
+└── sse.py       # StreamEventType, format_sse, langgraph -> SSE adapter
 ```
 
 ## Requirements
@@ -153,6 +163,49 @@ decision (heuristic vs. LLM), the tool call with retrieved chunks and
 cosine scores, the synthesis / direct / fallback output, and per-step
 latency.
 
+### 7. Verify Part 4 - streaming API
+
+In one terminal, launch the FastAPI server:
+
+```powershell
+.\scripts\run_api.ps1
+# or, equivalently:
+# uvicorn app.api.main:app --host 127.0.0.1 --port 8000
+```
+
+Wait for `Application startup complete` (cold start ~5s, warm cache ~1s),
+then in a second terminal run:
+
+```powershell
+python tests\verify_api.py
+```
+
+`verify_api.py` issues four queries to `POST /chat`, parses the
+`text/event-stream` body incrementally, and prints tokens to stdout
+*as they arrive* - the live proof that streaming actually works. It
+records a `time-to-first-token` (TTFT) for each query alongside the
+total latency; the gap between the two is the user-visible value of
+streaming. Both a human-readable trace and a structured JSON copy are
+saved under `tests/logs/api_run_<UTC>.txt` and `.json`.
+
+Quick manual smoke test with `curl` (note: tokens arrive one-by-one):
+
+```bash
+curl -N -X POST http://127.0.0.1:8000/chat \
+     -H "Content-Type: application/json" \
+     -H "Accept: text/event-stream" \
+     -d '{"query": "Translate good morning to Spanish."}'
+```
+
+Auto-generated OpenAPI documentation is available at
+[`http://127.0.0.1:8000/docs`](http://127.0.0.1:8000/docs).
+
+> **Heads-up:** Swagger UI buffers `text/event-stream` responses and
+> only reveals them after the connection closes. To observe tokens
+> *arriving* in real time, use `verify_api.py` or `curl -N` as shown
+> above. The API itself streams correctly - this is purely a Swagger
+> UI rendering limitation.
+
 ## Configuration
 
 | Variable | Meaning | Default |
@@ -168,6 +221,10 @@ latency.
 | `RAG_SCORE_THRESHOLD` | Cosine floor for hits | `0.5` |
 | `DATA_DIR` | Corpus directory | `data` |
 | `CACHE_DIR` | On-disk vector cache | `data/cache` |
+| `API_HOST` | FastAPI bind host | `0.0.0.0` |
+| `API_PORT` | FastAPI bind port | `8000` |
+| `API_CORS_ORIGINS` | CORS allow-list (JSON list) | `["*"]` |
+| `SSE_KEEPALIVE_SECONDS` | Comment ping interval to defeat idle proxies | `15` |
 
 See [`.env.example`](.env.example) for the full template.
 
@@ -253,6 +310,81 @@ human-readable trace committed under `tests/logs/`, mirroring the Part 2
 RAG log style for easy side-by-side comparison. A second formatter,
 `format_trace_json`, is also available for programmatic consumption.
 
+## Streaming API design notes
+
+Part 4 wraps the Part 3 LangGraph agent in a single-endpoint FastAPI
+service that streams the agent's response token-by-token over Server-
+Sent Events. The goals are (a) production-readiness (lifespan-managed
+singletons, validation, CORS, health probe, keepalive, structured error
+events), and (b) zero duplication of the agent's orchestration logic -
+the graph stays the single source of truth.
+
+### Why SSE, not WebSockets
+
+The interaction is strictly server-to-client text streaming with one
+request body up front. SSE matches that shape exactly: it works over
+plain HTTP/1.1, supports built-in reconnection, is trivial to consume
+with `curl`, and survives most corporate proxies. WebSockets adds
+bi-directional framing complexity that this use case never needs.
+
+### Streaming via LangGraph's custom-stream channel
+
+Token-level streaming is delivered through LangGraph's `custom`
+[stream mode](https://langchain-ai.github.io/langgraph/concepts/streaming/).
+Inside `synthesis_node` and `direct_node`,
+[`get_stream_writer()`](https://langchain-ai.github.io/langgraph/reference/runtimes/#langgraph.config.get_stream_writer)
+yields a writer that is a no-op when the graph is invoked synchronously
+(via `AgentRunner.run`) and a real conduit when invoked through
+`graph.stream(stream_mode=["updates","custom"])`. The same node code
+therefore powers both the Part 3 batch trace artefact (`agent_run_*`)
+and the Part 4 SSE endpoint - one graph, one orchestration layer.
+
+```python
+# app/agent/nodes.py (excerpt)
+writer = get_stream_writer()
+for token in llm.generate_stream(prompt):
+    chunks.append(token)
+    writer({"type": "token", "node": "synthesis", "value": token})
+```
+
+### Rich event protocol (not tokens-only)
+
+`POST /chat` emits four event types defined in
+[`app/api/sse.py`](app/api/sse.py):
+
+| `event:` | `data:` payload | When |
+|----------|-----------------|------|
+| `route` | `{route, method, elapsed_ms}` | After the router node decides |
+| `tool_call` | `{name, input, hits, top_score, tool_elapsed_ms, elapsed_ms}` | After `rag_search` runs |
+| `token` | `{type:"token", node, value, elapsed_ms}` | Once per LLM token |
+| `done` | full `AgentResponse`-shaped trace + `total_elapsed_ms` | At the end of the stream |
+| `error` | `{kind, message, elapsed_ms}` | Instead of `done` if a layer raises |
+
+The closing `done` event carries the same trace structure that
+`format_trace_json` produces in Part 3, so a single HTTP round-trip
+delivers both the streaming UX *and* a complete audit log.
+
+### Sync I/O bridged to the async event loop
+
+`OllamaClient.generate_stream` uses blocking `requests` I/O. The route
+handler (`app/api/routes.py`) wraps the synchronous SSE generator in
+[`starlette.concurrency.iterate_in_threadpool`](https://www.starlette.io/concurrency/),
+keeping the uvicorn event loop responsive for keepalive pings and
+client-disconnect detection. `EventSourceResponse` from
+[`sse-starlette`](https://github.com/sysid/sse-starlette) handles the
+keepalive comment frames automatically (every `SSE_KEEPALIVE_SECONDS`).
+
+### Lifespan singleton
+
+`AgentRunner` is created exactly once in the FastAPI lifespan handler:
+the BGE embedding model loads (~150 MB to RAM) and the FAISS index
+ingests (or restores from `data/cache/`) *before* the server accepts
+traffic. Subsequent requests share the same retriever (read-only after
+ingest) and the same compiled graph, so concurrent `/chat` calls cost
+only one extra in-flight LLM stream each. This pattern aligns with the
+Kubernetes readiness-probe contract: `/health` only returns `status: ok`
+once initialization is complete.
+
 ## RAG design notes
 
 - **Embedding model:** BGE-small-en-v1.5 (~33M params, 384-dim) chosen
@@ -278,7 +410,7 @@ RAG log style for easy side-by-side comparison. A second formatter,
 - [x] **Part 1: Model serving & deployment** - Ollama + Llama 3.2 1B (Q4_K_M) via Modelfile import; `verify_ollama.py` "Hello World" passes locally.
 - [x] **Part 2: In-Memory RAG** - FAISS `IndexFlatIP` over BGE-small embeddings; markdown-aware chunking; on-disk cache; `verify_rag.py` produces a per-query trace log under `tests/logs/`.
 - [x] **Part 3: Agentic Orchestrator** - LangGraph state machine with router / rag / synthesis / direct / fallback nodes, `@tool`-decorated `rag_search`, two-tier (heuristic + LLM) router, and dual text + JSON traces under `tests/logs/`.
-- [ ] Part 4: Streaming API (FastAPI + SSE)
+- [x] **Part 4: Streaming API** - FastAPI service with lifespan-managed `AgentRunner` singleton, `POST /chat` returning SSE (`route` / `tool_call` / `token` / `done` / `error` events), `GET /health` probe, sync-stream-bridged-to-async I/O, and end-to-end `verify_api.py` artefact under `tests/logs/`.
 - [ ] Part 5: Bonus tasks (quantization profiling, structured output)
 
 ## License

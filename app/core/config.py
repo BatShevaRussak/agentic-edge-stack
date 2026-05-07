@@ -23,6 +23,12 @@ class Settings(BaseSettings):
     data_dir: Path = Path("data")
     cache_dir: Path = Path("data/cache")
 
+    # API (Part 4)
+    api_host: str = "0.0.0.0"
+    api_port: int = 8000
+    api_cors_origins: list[str] = ["*"]
+    sse_keepalive_seconds: int = 15
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

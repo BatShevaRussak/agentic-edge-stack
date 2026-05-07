@@ -1,0 +1,116 @@
+
+======================================================================
+API SSE STREAMING VERIFICATION (Part 4)
+======================================================================
+Timestamp:  2026-05-07T16:38:56.078117+00:00
+Base URL:   http://127.0.0.1:8000
+Timeout:    180.0s
+
+======================================================================
+HEALTH PROBE  (GET /health)
+======================================================================
+  status:           ok
+  ollama_alive:     True
+  retriever_ready:  True
+  retriever_chunks: 60
+  ollama_model:     llama3.2:1b
+  embed_model:      ./models/bge-small-en-v1.5
+
+======================================================================
+DEMO QUERIES  (POST /chat - SSE)
+======================================================================
+
+----------------------------------------------------------------------
+QUERY: What chunk size does this RAG pipeline use, and what is the overlap?
+EXPECTED ROUTE: rag
+----------------------------------------------------------------------
+
+  [route]      route=rag  method=llm  server_elapsed_ms=17347.83
+  [tool_call]  name=rag_search  hits=3  top_score=0.7647  tool_elapsed_ms=95.83
+  [stream]     
+
+  [stream]     (first token at 28301.8 ms)
+
+  [done]       total_elapsed_ms=39619.83  answer_chars=567
+
+ANSWER (assembled):
+  > ## Step 1: Identify the relevant information about the RAG pipeline's chunk size
+  > The question specifically asks about the chunk size used in the RAG pipeline.
+  > 
+  > ## Step 2: Reference the provided text to confirm the answer
+  > According to [3] data/README.md, a common starting point for the chunk size is 300-700 characters with 10-15% overlap.
+  > 
+  > ## Step 3: Provide the final answer based on the information found in step 2.
+  > The RAG pipeline uses a chunk size of approximately 300-700 characters, which means it has an overlap of 10-15%.
+  > 
+  > The final answer is: $\boxed{[1]}$
+
+[OK]   expected_route=rag  actual_route=rag  TTFT=28301.8 ms  total=39619.8 ms
+
+----------------------------------------------------------------------
+QUERY: What is 17 multiplied by 24?
+EXPECTED ROUTE: direct
+----------------------------------------------------------------------
+
+  [route]      route=direct  method=heuristic  server_elapsed_ms=4.24
+
+  [stream]     (first token at 3951.7 ms)
+
+  [done]       total_elapsed_ms=6061.59  answer_chars=69
+
+ANSWER (assembled):
+  > To find the answer, I'll multiply 17 and 24 together: 
+  > 
+  > 17 * 24 = 408
+
+[OK]   expected_route=direct  actual_route=direct  TTFT=3951.7 ms  total=6061.6 ms
+
+----------------------------------------------------------------------
+QUERY: Who are you?
+EXPECTED ROUTE: direct
+----------------------------------------------------------------------
+
+  [route]      route=direct  method=heuristic  server_elapsed_ms=4.55
+
+  [stream]     (first token at 2664.5 ms)
+
+  [done]       total_elapsed_ms=5931.91  answer_chars=240
+
+ANSWER (assembled):
+  > I'm an artificial intelligence designed to assist and communicate with users in a helpful and informative way. I don't have personal characteristics or emotions like humans do, but I'm here to provide quick answers and guidance when needed.
+
+[OK]   expected_route=direct  actual_route=direct  TTFT=2664.5 ms  total=5931.9 ms
+
+----------------------------------------------------------------------
+QUERY: What is the recommended recipe for a chocolate cake?
+EXPECTED ROUTE: rag
+----------------------------------------------------------------------
+
+  [route]      route=rag  method=llm  server_elapsed_ms=11899.23
+  [tool_call]  name=rag_search  hits=0  top_score=None  tool_elapsed_ms=55.82
+  [stream]     
+
+  [stream]     (first token at 11959.7 ms)
+
+  [done]       total_elapsed_ms=11959.62  answer_chars=51
+
+ANSWER (assembled):
+  > I don't have that information in my knowledge base.
+
+[OK]   expected_route=rag  actual_route=rag  TTFT=11959.7 ms  total=11959.6 ms
+
+======================================================================
+SUMMARY
+======================================================================
+Queries executed:                4 / 4
+Routes as expected:              4 / 4
+Streaming verified (TTFT < total): 3 / 4
+
+  [OK  ] route=rag     TTFT=28302 ms    total=39620 ms    tokens=138  query="What chunk size does this RAG pipeline use, and what is the "
+  [OK  ] route=direct  TTFT=3952 ms     total=6062 ms     tokens=23   query="What is 17 multiplied by 24?"
+  [OK  ] route=direct  TTFT=2665 ms     total=5932 ms     tokens=44   query="Who are you?"
+  [OK  ] route=rag     TTFT=11960 ms    total=11960 ms    tokens=1    query="What is the recommended recipe for a chocolate cake?"
+
+======================================================================
+DONE
+======================================================================
