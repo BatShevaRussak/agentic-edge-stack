@@ -42,11 +42,13 @@ class OllamaClient:
         except requests.RequestException:
             return False
 
-    def generate(self, prompt: str) -> str:
+    def generate(self, prompt: str, options: dict | None = None) -> str:
         """Send a prompt to the model and return the full response.
 
         Args:
             prompt: The user prompt to send to the model.
+            options: Ollama sampling options (e.g. ``{"temperature": 0,
+                "num_predict": 5}``); ``None`` keeps the server defaults.
 
         Returns:
             The model's full text response.
@@ -54,14 +56,17 @@ class OllamaClient:
         Raises:
             OllamaError: If the request fails or returns a non-200 status.
         """
+        payload: dict = {
+            "model": self.model,
+            "prompt": prompt,
+            "stream": False,
+        }
+        if options:
+            payload["options"] = options
         try:
             response = requests.post(
                 f"{self.host}/api/generate",
-                json={
-                    "model": self.model,
-                    "prompt": prompt,
-                    "stream": False,
-                },
+                json=payload,
                 timeout=self.timeout,
             )
             response.raise_for_status()

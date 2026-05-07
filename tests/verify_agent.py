@@ -1,6 +1,6 @@
 """End-to-end verification of the agent (Part 3).
 
-Runs 7 demo queries (3 RAG, 3 DIRECT, 1 OOD->fallback) and writes both
+Runs 7 demo queries (3 RAG, 3 DIRECT, 1 RAG->fallback) and writes both
 ``agent_run_<UTC>.txt`` and ``agent_run_<UTC>.json`` under ``tests/logs/``.
 The query mix exercises every edge of the LangGraph.
 
@@ -58,7 +58,7 @@ DEMO_QUERIES: tuple[tuple[str, str], ...] = (
     ),
     (
         "What is the recommended recipe for a chocolate cake?",
-        "rag",  # router routes to RAG; RAG returns 0 hits; fallback fires.
+        "rag",  # ambiguous: LLM routes to RAG; retriever -> 0 hits; fallback fires.
     ),
 )
 

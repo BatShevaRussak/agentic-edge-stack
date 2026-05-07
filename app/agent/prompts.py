@@ -1,43 +1,28 @@
-"""Prompt templates, router output parser, and a heuristic pre-filter.
+"""Prompt templates and the router output parser.
 
-Routing is a two-tier cascade: ``quick_classify`` resolves obvious cases
-(arithmetic, translation, identity) without an LLM call, the LLM router
-handles everything else.
+Every query is classified by a single deterministic LLM call -- no
+heuristic shortcuts. See ``app.agent.nodes.router_node`` for the wiring.
 """
 
 from __future__ import annotations
 
-import re
-
 from app.agent.types import Route
 
 _ROUTER_PROMPT_TEMPLATE = """You are a routing classifier for an AI assistant.
-Decide whether the user's question requires looking up TECHNICAL FACTS in a
-local knowledge base about a specific project (a Llama 3.2 deployment, a RAG
-pipeline using FAISS, BGE embeddings, the Ollama runtime, and a chunking
-strategy) -- or whether it can be answered directly without any external
+Reply with EXACTLY ONE WORD on a single line. No explanation. No punctuation.
+Allowed answers: DIRECT  or  RAG.
+
+Use DIRECT for general knowledge, math, translation, casual conversation,
+self-identity ("who are you"), greetings, definitions of common concepts, or
+ANY question that does not depend on private project documentation. This is
+the default whenever the question can be answered without project-specific
 context.
 
-Reply with EXACTLY ONE WORD on a single line. No explanation. No punctuation.
-Allowed answers: RAG  or  DIRECT.
-
-Use RAG when the question is about: this project's components, configuration,
-embeddings, vector store, retrieval, model card, deployment, chunking, or any
-specific technical fact that might be documented.
-
-Use DIRECT when the question is general knowledge, math, translation, casual
-conversation, identity ("who are you"), or unrelated to the project.
+Use RAG ONLY when the question is about THIS specific project's
+configuration, components, embeddings, vector store, retrieval, model card,
+deployment, or chunking strategy.
 
 Examples:
-Question: What chunk size does this RAG pipeline use?
-Answer: RAG
-
-Question: Why was BGE-small chosen over MiniLM?
-Answer: RAG
-
-Question: How does FAISS compute cosine similarity in this project?
-Answer: RAG
-
 Question: What is 17 multiplied by 24?
 Answer: DIRECT
 
@@ -46,6 +31,21 @@ Answer: DIRECT
 
 Question: Who are you?
 Answer: DIRECT
+
+Question: What is the capital of France?
+Answer: DIRECT
+
+Question: Explain HTTP in one sentence.
+Answer: DIRECT
+
+Question: What chunk size does this RAG pipeline use?
+Answer: RAG
+
+Question: Why was BGE-small chosen over MiniLM?
+Answer: RAG
+
+Question: How does FAISS compute cosine similarity in this project?
+Answer: RAG
 
 Question: {query}
 Answer:"""
@@ -74,12 +74,11 @@ def build_direct_prompt(query: str) -> str:
 
 
 def parse_route(raw_output: str) -> Route:
-    """Map the router LLM's free-form output to a ``Route``.
+    """Map the router LLM's output to a ``Route``.
 
-    Permissive: 1B models often emit extra tokens. If both labels appear
-    we pick the one that came first; if neither, we default to ``"rag"``
-    (safer to over-search than to answer a project question without
-    context).
+    Permissive: if both labels appear the first wins; if neither, default
+    to ``"direct"`` -- a wrong ``direct`` gives a generic answer, a wrong
+    ``rag`` returns the "no information" fallback on every off-topic query.
     """
     text = raw_output.strip().upper()
     has_rag = "RAG" in text
@@ -91,49 +90,6 @@ def parse_route(raw_output: str) -> Route:
         return "direct"
     if has_rag and has_direct:
         return "rag" if text.find("RAG") < text.find("DIRECT") else "direct"
-    return "rag"
+    return "direct"
 
 
-# --- Heuristic pre-filter --------------------------------------------------
-
-_MATH_PATTERN = re.compile(
-    r"\b\d+\s*(?:\+|-|\*|/|x|×|÷|times|plus|minus|divided\s+by|multiplied\s+by)"
-    r"\s*\d+\b",
-    re.IGNORECASE,
-)
-
-_DIRECT_PHRASES: tuple[str, ...] = (
-    "translate ",
-    "translation of ",
-    "in spanish",
-    "in french",
-    "in german",
-    "in hebrew",
-    "in italian",
-    "who are you",
-    "what are you",
-    "how are you",
-    "your name",
-    "your purpose",
-    "what's your name",
-    "introduce yourself",
-)
-
-
-def quick_classify(query: str) -> Route | None:
-    """Return ``"direct"`` for unambiguous general queries, ``None`` otherwise.
-
-    Catches arithmetic, translation requests, and self-identity questions.
-    Never returns ``"rag"`` -- project-specific detection is fuzzier and
-    is left to the LLM router so the agentic decision stays in the trace.
-    """
-    text = query.lower().strip()
-
-    if _MATH_PATTERN.search(text):
-        return "direct"
-
-    for phrase in _DIRECT_PHRASES:
-        if phrase in text:
-            return "direct"
-
-    return None

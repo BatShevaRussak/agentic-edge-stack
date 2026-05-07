@@ -39,7 +39,7 @@ state machine split across modules of one concern each:
 app/agent/
 ├── types.py     # AgentState, ToolCall, TraceEvent, AgentResponse
 ├── errors.py    # AgentError, RoutingError, ToolExecutionError
-├── prompts.py   # Router prompt, direct prompt, heuristic pre-filter
+├── prompts.py   # Router prompt, direct prompt, parse_route (default = "direct")
 ├── tools.py     # @tool rag_search + Pydantic args schema
 ├── nodes.py     # router / rag / synthesis / direct / fallback nodes
 ├── graph.py     # build_agent_graph() - the StateGraph wiring
@@ -155,13 +155,12 @@ python tests\verify_agent.py
 
 `verify_agent.py` exercises every edge of the agent graph with seven
 demo queries (three project-specific that should retrieve, three
-general-knowledge that should answer directly, and one deliberately
-out-of-domain that should route to RAG and fall through to the canonical
-"no information" response). The trace log is written to
-`tests/logs/agent_run_<UTC>.txt` and shows, for every query, the router
-decision (heuristic vs. LLM), the tool call with retrieved chunks and
-cosine scores, the synthesis / direct / fallback output, and per-step
-latency.
+general-knowledge that should answer directly, and one ambiguous
+out-of-domain query that the router sends to RAG and that falls
+through to the canonical "no information" response). The trace log is
+written to `tests/logs/agent_run_<UTC>.txt` and shows, for every query,
+the router decision, the tool call with retrieved chunks and cosine
+scores, the synthesis / direct / fallback output, and per-step latency.
 
 ### 7. Verify Part 4 - streaming API
 
@@ -264,18 +263,33 @@ with `Annotated[list, add]` reducers for the trace), and exposes a
 `get_graph().draw_mermaid()` view of the compiled graph - the diagram
 above is generated from the actual edges, not hand-drawn.
 
-### Two-tier router
+### Deterministic LLM router
 
 A 1B-parameter classifier is unreliable at binary tasks: in early runs,
 the LLM router routed *every* query to RAG, regardless of whether the
-question was project-specific. The fix is a small **heuristic
-pre-filter** in [`app/agent/prompts.py`](app/agent/prompts.py) that
-catches arithmetic, translation, and self-identity questions in O(1)
-without an LLM call. Anything ambiguous still goes through the LLM
-router with a six-example few-shot prompt and a defensive parser.
+question was project-specific. The root causes were three knobs working
+together against us, all fixed in
+[`app/agent/nodes.py`](app/agent/nodes.py) and
+[`app/agent/prompts.py`](app/agent/prompts.py):
 
-The trace records `method=heuristic` or `method=llm` for every routing
-decision, so the cascade is fully observable.
+1. **Sampling.** The router LLM call now passes
+   `options={"temperature": 0, "num_predict": 5}` so decoding is greedy
+   (reproducible) and capped at five tokens (the model cannot ramble
+   into a paragraph that confuses the parser).
+2. **Parser default.** When the model output is genuinely ambiguous,
+   `parse_route` returns `"direct"` rather than `"rag"`. The asymmetry
+   is intentional: a wrong `"direct"` produces a generic LLM answer
+   (often still useful); a wrong `"rag"` returns the canonical "I don't
+   have that information" fallback whenever the question is unrelated
+   to the knowledge base, which is strictly worse for the user.
+3. **Few-shot balance.** The router prompt lists DIRECT guidance and
+   examples first (primacy bias), with five DIRECT examples vs. three
+   RAG examples - counter-weighting the 1B model's tendency to favour
+   the more "specialised" looking label.
+
+Every query is evaluated by the LLM (the trace records `method=llm`
+on every decision), so the agent's routing is fully agentic and fully
+observable.
 
 ### LLM-free fallback
 
@@ -409,7 +423,7 @@ once initialization is complete.
 
 - [x] **Part 1: Model serving & deployment** - Ollama + Llama 3.2 1B (Q4_K_M) via Modelfile import; `verify_ollama.py` "Hello World" passes locally.
 - [x] **Part 2: In-Memory RAG** - FAISS `IndexFlatIP` over BGE-small embeddings; markdown-aware chunking; on-disk cache; `verify_rag.py` produces a per-query trace log under `tests/logs/`.
-- [x] **Part 3: Agentic Orchestrator** - LangGraph state machine with router / rag / synthesis / direct / fallback nodes, `@tool`-decorated `rag_search`, two-tier (heuristic + LLM) router, and dual text + JSON traces under `tests/logs/`.
+- [x] **Part 3: Agentic Orchestrator** - LangGraph state machine with router / rag / synthesis / direct / fallback nodes, `@tool`-decorated `rag_search`, deterministic single-stage LLM router (`temperature=0`, `num_predict=5`, asymmetric `direct`-biased parser), and dual text + JSON traces under `tests/logs/`.
 - [x] **Part 4: Streaming API** - FastAPI service with lifespan-managed `AgentRunner` singleton, `POST /chat` returning SSE (`route` / `tool_call` / `token` / `done` / `error` events), `GET /health` probe, sync-stream-bridged-to-async I/O, and end-to-end `verify_api.py` artefact under `tests/logs/`.
 - [ ] Part 5: Bonus tasks (quantization profiling, structured output)
 

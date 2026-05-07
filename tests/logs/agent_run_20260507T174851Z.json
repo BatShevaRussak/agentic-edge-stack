@@ -1,0 +1,440 @@
+{
+  "timestamp": "2026-05-07T17:52:12.654022+00:00",
+  "config": {
+    "embed_model_name": "./models/bge-small-en-v1.5",
+    "ollama_model": "llama3.2:1b",
+    "rag_top_k": 3,
+    "rag_score_threshold": 0.5
+  },
+  "ingest": {
+    "num_chunks": 60,
+    "elapsed_seconds": 0.397
+  },
+  "queries": [
+    {
+      "query": "What chunk size does this RAG pipeline use, and what is the overlap?",
+      "route": "rag",
+      "answer": "## The chunk size used by this RAG pipeline is [2].\n\nThe problem statement doesn't provide information on how much chunk size was chosen for this particular pipeline. However, it does mention that a common starting point is 300-700 characters with 10-15% overlap, but no direct reference to the actual chunk size used in this pipeline can be found.\n\n## The overlap of chunks is [2].\n\nThe problem statement doesn't provide information on how much overlap was chosen for this particular pipeline. However, it does mention that a common starting point is 300-700 characters with 10-15% overlap, but no direct reference to the actual overlap used in this pipeline can be found.\n\nI don't have that information in my knowledge base.",
+      "total_elapsed_ms": 41981.58,
+      "tool_calls": [
+        {
+          "name": "rag_search",
+          "input": {
+            "query": "What chunk size does this RAG pipeline use, and what is the overlap?"
+          },
+          "output": {
+            "query": "What chunk size does this RAG pipeline use, and what is the overlap?",
+            "hits": [
+              {
+                "score": 0.7647,
+                "source": "data/05_rag_concepts.md",
+                "chunk_index": 3,
+                "text": "## The pipeline\n\nA minimal RAG system has five stages:"
+              },
+              {
+                "score": 0.7631,
+                "source": "data/05_rag_concepts.md",
+                "chunk_index": 8,
+                "text": "Chunk size is a tradeoff: smaller chunks improve precision (the\nretrieved snippet is more on-topic) but lose surrounding context;\nlarger chunks include more context but dilute the embedding signal.\nA common starting point is 300-700 characters with 10-15% overlap so\nthat information near boundaries is not lost."
+              },
+              {
+                "score": 0.7473,
+                "source": "data/README.md",
+                "chunk_index": 3,
+                "text": "| `04_ollama_runtime.md` | Ollama runtime, GGUF format, K-quants (Q4_K_M), Modelfile templating | 1.2 |\n| `05_rag_concepts.md` | RAG pipeline, chunking strategies, top-K retrieval, prompt augmentation | 1.5 |"
+              }
+            ]
+          },
+          "elapsed_ms": 70.84,
+          "error": null
+        }
+      ],
+      "trace": [
+        {
+          "node": "router",
+          "timestamp": "2026-05-07T17:48:52.350487+00:00",
+          "elapsed_ms": 16883.16,
+          "inputs": {
+            "query": "What chunk size does this RAG pipeline use, and what is the overlap?",
+            "prompt_chars": 1225
+          },
+          "outputs": {
+            "method": "llm",
+            "raw_output": "RAG",
+            "decided_route": "rag",
+            "elapsed_ms": 16883.16
+          }
+        },
+        {
+          "node": "rag_search",
+          "timestamp": "2026-05-07T17:49:09.234588+00:00",
+          "elapsed_ms": 70.86,
+          "inputs": {
+            "query": "What chunk size does this RAG pipeline use, and what is the overlap?"
+          },
+          "outputs": {
+            "hits_count": 3,
+            "top_score": 0.7646585702896118,
+            "elapsed_ms": 70.86
+          }
+        },
+        {
+          "node": "synthesis",
+          "timestamp": "2026-05-07T17:49:09.306022+00:00",
+          "elapsed_ms": 25020.9,
+          "inputs": {
+            "prompt_chars": 1080,
+            "num_hits": 3
+          },
+          "outputs": {
+            "answer_chars": 726,
+            "error": null,
+            "elapsed_ms": 25020.9
+          }
+        }
+      ]
+    },
+    {
+      "query": "Why was BGE-small chosen over all-MiniLM-L6-v2?",
+      "route": "rag",
+      "answer": "According to [1], BGE-small was chosen because it is smaller in terms of parameters and has similar inference costs as all-MiniLM-L6-v2. \n\n[2] states that \"A six-point gap on MTEB is substantial - it corresponds roughly to moving from a small model to a model 5-10x larger in older benchmarks.\"\n\n[3] provides additional information, stating that BGE-small was chosen because of its smaller size compared to all-MiniLM-L6-v2.",
+      "total_elapsed_ms": 45676.17,
+      "tool_calls": [
+        {
+          "name": "rag_search",
+          "input": {
+            "query": "Why was BGE-small chosen over all-MiniLM-L6-v2?"
+          },
+          "output": {
+            "query": "Why was BGE-small chosen over all-MiniLM-L6-v2?",
+            "hits": [
+              {
+                "score": 0.8229,
+                "source": "data/03_sentence_transformers_and_bge.md",
+                "chunk_index": 4,
+                "text": "## BGE-small vs MiniLM-L6\n\nBoth models are popular choices for local CPU-bound RAG. They are\ncompared on the MTEB (Massive Text Embedding Benchmark) leaderboard,\nwhich aggregates 56 retrieval, classification, and clustering tasks:\n\n| Model | Params | Dim | MTEB avg |\n|-------|--------|-----|----------|\n| `sentence-transformers/all-MiniLM-L6-v2` | 22M | 384 | ~56.3 |\n| `BAAI/bge-small-en-v1.5`                 | 33M | 384 | ~62.2 |"
+              },
+              {
+                "score": 0.728,
+                "source": "data/03_sentence_transformers_and_bge.md",
+                "chunk_index": 5,
+                "text": "A six-point gap on MTEB is substantial - it corresponds roughly to\nmoving from a small model to a model 5-10x larger in older\nbenchmarks. Inference cost is similar (both fit in under 150 MB and\nrun at hundreds of sentences per second on a single CPU core), so\nBGE-small is the better default unless backwards compatibility with\nan existing index is required."
+              },
+              {
+                "score": 0.7154,
+                "source": "data/03_sentence_transformers_and_bge.md",
+                "chunk_index": 3,
+                "text": "## BGE - BAAI General Embedding\n\nBGE is a family of embedding models published by the Beijing Academy\nof Artificial Intelligence (BAAI) starting in mid-2023. The v1.5\nrevision improved retrieval quality and reduced sensitivity to query\nphrasing. The \"small\" variant has roughly 33 million parameters and\nproduces 384-dimensional vectors, the same dimension as\n`all-MiniLM-L6-v2` but with stronger benchmark performance."
+              }
+            ]
+          },
+          "elapsed_ms": 42.23,
+          "error": null
+        }
+      ],
+      "trace": [
+        {
+          "node": "router",
+          "timestamp": "2026-05-07T17:49:34.328476+00:00",
+          "elapsed_ms": 13441.8,
+          "inputs": {
+            "query": "Why was BGE-small chosen over all-MiniLM-L6-v2?",
+            "prompt_chars": 1204
+          },
+          "outputs": {
+            "method": "llm",
+            "raw_output": "RAG",
+            "decided_route": "rag",
+            "elapsed_ms": 13441.8
+          }
+        },
+        {
+          "node": "rag_search",
+          "timestamp": "2026-05-07T17:49:47.770937+00:00",
+          "elapsed_ms": 42.25,
+          "inputs": {
+            "query": "Why was BGE-small chosen over all-MiniLM-L6-v2?"
+          },
+          "outputs": {
+            "hits_count": 3,
+            "top_score": 0.8228597640991211,
+            "elapsed_ms": 42.25
+          }
+        },
+        {
+          "node": "synthesis",
+          "timestamp": "2026-05-07T17:49:47.813856+00:00",
+          "elapsed_ms": 32189.26,
+          "inputs": {
+            "prompt_chars": 1755,
+            "num_hits": 3
+          },
+          "outputs": {
+            "answer_chars": 424,
+            "error": null,
+            "elapsed_ms": 32189.26
+          }
+        }
+      ]
+    },
+    {
+      "query": "How does FAISS compute cosine similarity in this project?",
+      "route": "rag",
+      "answer": "According to the context [1], FAISS computes cosine similarity between two vectors x and y as the plain inner product x . y.\n\nI don't have that information in my knowledge base.",
+      "total_elapsed_ms": 37770.34,
+      "tool_calls": [
+        {
+          "name": "rag_search",
+          "input": {
+            "query": "How does FAISS compute cosine similarity in this project?"
+          },
+          "output": {
+            "query": "How does FAISS compute cosine similarity in this project?",
+            "hits": [
+              {
+                "score": 0.857,
+                "source": "data/02_faiss_overview.md",
+                "chunk_index": 6,
+                "text": "## Cosine similarity via inner product\n\nCosine similarity between two vectors x and y is defined as\nx . y / (||x|| * ||y||). If both vectors are pre-normalized to unit\nL2 norm, the denominators become 1 and cosine similarity reduces to\nthe plain inner product x . y. FAISS therefore does not provide a\ndedicated cosine index - the standard pattern is to L2-normalize\nvectors before insertion and use `IndexFlatIP`. This is the approach\nthis project uses."
+              },
+              {
+                "score": 0.7967,
+                "source": "data/02_faiss_overview.md",
+                "chunk_index": 0,
+                "text": "# FAISS - Overview and Index Selection\n\n## What FAISS is\n\nFAISS (Facebook AI Similarity Search) is an open-source library for\nefficient similarity search and clustering of dense vectors. It is\nwritten in C++ with Python bindings and is the de facto standard for\nnearest-neighbor search in machine-learning systems. Released by\nMeta in 2017 (Johnson, Douze & Jegou), FAISS powers vector search in\nproduction at companies including Meta, Spotify, and OpenAI's\ninternal tools."
+              },
+              {
+                "score": 0.7807,
+                "source": "data/03_sentence_transformers_and_bge.md",
+                "chunk_index": 6,
+                "text": "## Normalization and the cosine trick\n\nBoth models output raw vectors that are not unit-norm. To use cosine\nsimilarity through a FAISS inner-product index, the vectors must be\nL2-normalized before insertion. `sentence-transformers` exposes this\nvia `model.encode(..., normalize_embeddings=True)`, which divides\neach vector by its L2 norm. After normalization, dot product equals\ncosine similarity by definition."
+              }
+            ]
+          },
+          "elapsed_ms": 42.48,
+          "error": null
+        }
+      ],
+      "trace": [
+        {
+          "node": "router",
+          "timestamp": "2026-05-07T17:50:20.005346+00:00",
+          "elapsed_ms": 13217.14,
+          "inputs": {
+            "query": "How does FAISS compute cosine similarity in this project?",
+            "prompt_chars": 1214
+          },
+          "outputs": {
+            "method": "llm",
+            "raw_output": "RAG",
+            "decided_route": "rag",
+            "elapsed_ms": 13217.14
+          }
+        },
+        {
+          "node": "rag_search",
+          "timestamp": "2026-05-07T17:50:33.223110+00:00",
+          "elapsed_ms": 42.5,
+          "inputs": {
+            "query": "How does FAISS compute cosine similarity in this project?"
+          },
+          "outputs": {
+            "hits_count": 3,
+            "top_score": 0.8570268154144287,
+            "elapsed_ms": 42.5
+          }
+        },
+        {
+          "node": "synthesis",
+          "timestamp": "2026-05-07T17:50:33.266477+00:00",
+          "elapsed_ms": 24507.49,
+          "inputs": {
+            "prompt_chars": 1863,
+            "num_hits": 3
+          },
+          "outputs": {
+            "answer_chars": 177,
+            "error": null,
+            "elapsed_ms": 24507.49
+          }
+        }
+      ]
+    },
+    {
+      "query": "What is 17 multiplied by 24?",
+      "route": "direct",
+      "answer": "To find the answer to 17 multiplied by 24, I'll multiply them together: 17 × 24 = 408.",
+      "total_elapsed_ms": 21641.26,
+      "tool_calls": [],
+      "trace": [
+        {
+          "node": "router",
+          "timestamp": "2026-05-07T17:50:57.776303+00:00",
+          "elapsed_ms": 14979.77,
+          "inputs": {
+            "query": "What is 17 multiplied by 24?",
+            "prompt_chars": 1185
+          },
+          "outputs": {
+            "method": "llm",
+            "raw_output": "DIRECT",
+            "decided_route": "direct",
+            "elapsed_ms": 14979.77
+          }
+        },
+        {
+          "node": "direct",
+          "timestamp": "2026-05-07T17:51:12.756696+00:00",
+          "elapsed_ms": 6658.64,
+          "inputs": {
+            "query": "What is 17 multiplied by 24?",
+            "prompt_chars": 240
+          },
+          "outputs": {
+            "answer_chars": 86,
+            "error": null,
+            "elapsed_ms": 6658.64
+          }
+        }
+      ]
+    },
+    {
+      "query": "Translate 'good morning' to Spanish.",
+      "route": "direct",
+      "answer": "To translate \"good morning\" into Spanish, I'd say \"buenos días.\"",
+      "total_elapsed_ms": 18747.55,
+      "tool_calls": [],
+      "trace": [
+        {
+          "node": "router",
+          "timestamp": "2026-05-07T17:51:19.416555+00:00",
+          "elapsed_ms": 12450.35,
+          "inputs": {
+            "query": "Translate 'good morning' to Spanish.",
+            "prompt_chars": 1193
+          },
+          "outputs": {
+            "method": "llm",
+            "raw_output": "DIRECT",
+            "decided_route": "direct",
+            "elapsed_ms": 12450.35
+          }
+        },
+        {
+          "node": "direct",
+          "timestamp": "2026-05-07T17:51:31.867541+00:00",
+          "elapsed_ms": 6295.21,
+          "inputs": {
+            "query": "Translate 'good morning' to Spanish.",
+            "prompt_chars": 248
+          },
+          "outputs": {
+            "answer_chars": 64,
+            "error": null,
+            "elapsed_ms": 6295.21
+          }
+        }
+      ]
+    },
+    {
+      "query": "Who are you?",
+      "route": "direct",
+      "answer": "I'm an assistant here to provide information and answer questions to the best of my ability, but I don't have personal characteristics or descriptions, as I am a machine designed to assist with tasks.",
+      "total_elapsed_ms": 20574.78,
+      "tool_calls": [],
+      "trace": [
+        {
+          "node": "router",
+          "timestamp": "2026-05-07T17:51:38.164146+00:00",
+          "elapsed_ms": 12836.66,
+          "inputs": {
+            "query": "Who are you?",
+            "prompt_chars": 1169
+          },
+          "outputs": {
+            "method": "llm",
+            "raw_output": "DIRECT",
+            "decided_route": "direct",
+            "elapsed_ms": 12836.66
+          }
+        },
+        {
+          "node": "direct",
+          "timestamp": "2026-05-07T17:51:51.001405+00:00",
+          "elapsed_ms": 7736.27,
+          "inputs": {
+            "query": "Who are you?",
+            "prompt_chars": 224
+          },
+          "outputs": {
+            "answer_chars": 200,
+            "error": null,
+            "elapsed_ms": 7736.27
+          }
+        }
+      ]
+    },
+    {
+      "query": "What is the recommended recipe for a chocolate cake?",
+      "route": "rag",
+      "answer": "I don't have that information in my knowledge base.",
+      "total_elapsed_ms": 13912.33,
+      "tool_calls": [
+        {
+          "name": "rag_search",
+          "input": {
+            "query": "What is the recommended recipe for a chocolate cake?"
+          },
+          "output": {
+            "query": "What is the recommended recipe for a chocolate cake?",
+            "hits": []
+          },
+          "elapsed_ms": 37.85,
+          "error": null
+        }
+      ],
+      "trace": [
+        {
+          "node": "router",
+          "timestamp": "2026-05-07T17:51:58.741672+00:00",
+          "elapsed_ms": 13871.26,
+          "inputs": {
+            "query": "What is the recommended recipe for a chocolate cake?",
+            "prompt_chars": 1209
+          },
+          "outputs": {
+            "method": "llm",
+            "raw_output": "RAG",
+            "decided_route": "rag",
+            "elapsed_ms": 13871.26
+          }
+        },
+        {
+          "node": "rag_search",
+          "timestamp": "2026-05-07T17:52:12.613545+00:00",
+          "elapsed_ms": 37.87,
+          "inputs": {
+            "query": "What is the recommended recipe for a chocolate cake?"
+          },
+          "outputs": {
+            "hits_count": 0,
+            "top_score": null,
+            "elapsed_ms": 37.87
+          }
+        },
+        {
+          "node": "fallback",
+          "timestamp": "2026-05-07T17:52:12.652063+00:00",
+          "elapsed_ms": 0.01,
+          "inputs": {
+            "reason": "no_hits_above_threshold"
+          },
+          "outputs": {
+            "answer": "I don't have that information in my knowledge base.",
+            "elapsed_ms": 0.01
+          }
+        }
+      ]
+    }
+  ]
+}

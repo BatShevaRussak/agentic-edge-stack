@@ -45,7 +45,7 @@ DEMO_QUERIES: tuple[tuple[str, str], ...] = (
     ),
     (
         "What is the recommended recipe for a chocolate cake?",
-        "rag",  # router -> RAG, retriever -> 0 hits, fallback fires.
+        "rag",  # ambiguous: LLM routes to RAG; retriever -> 0 hits; fallback fires.
     ),
 )
 

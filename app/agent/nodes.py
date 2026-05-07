@@ -19,7 +19,6 @@ from app.agent.prompts import (
     build_direct_prompt,
     build_router_prompt,
     parse_route,
-    quick_classify,
 )
 from app.agent.tools import rag_search
 from app.agent.types import AgentState, ToolCall, TraceEvent
@@ -108,28 +107,27 @@ def _serialize_retrieval(result: RetrievalResult) -> dict[str, Any]:
 # --- Nodes -----------------------------------------------------------------
 
 
+_ROUTER_LLM_OPTIONS: dict[str, Any] = {
+    "temperature": 0,
+    "num_predict": 5,
+}
+
+
 def router_node(state: AgentState, *, llm: OllamaClient) -> dict[str, Any]:
-    """Classify the query as ``rag`` or ``direct`` (heuristic, then LLM)."""
+    """Classify the query as ``rag`` or ``direct`` via a deterministic LLM call.
+
+    ``temperature=0`` for reproducibility; ``num_predict=5`` caps the output
+    so 1B models cannot ramble past the parser.
+    """
     started_perf = time.perf_counter()
     started_at = _utc_now_iso()
     query = state["query"]
 
-    heuristic_route = quick_classify(query)
-    if heuristic_route is not None:
-        event = _make_event(
-            node="router",
-            started_at=started_at,
-            started_perf=started_perf,
-            inputs={"query": query},
-            outputs={"method": "heuristic", "decided_route": heuristic_route},
-        )
-        return {"route": heuristic_route, "trace": [event]}
-
     prompt = build_router_prompt(query)
     try:
-        raw = llm.generate(prompt)
+        raw = llm.generate(prompt, options=_ROUTER_LLM_OPTIONS)
     except LLMClientError as exc:
-        logger.warning("router LLM failed (%s); defaulting to RAG", exc)
+        logger.warning("router LLM failed (%s); defaulting to direct", exc)
         raw = ""
 
     route = parse_route(raw)
