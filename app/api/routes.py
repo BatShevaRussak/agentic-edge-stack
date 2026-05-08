@@ -70,7 +70,7 @@ def _sync_event_stream(
     """
     final_state: dict[str, Any] = {}
     try:
-        graph_stream = runner._graph.stream(
+        graph_stream = runner.graph.stream(
             _build_initial_state(query),
             stream_mode=["updates", "custom"],
         )

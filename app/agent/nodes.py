@@ -38,12 +38,9 @@ def _stream_llm_tokens(
     node_name: str,
     writer: Callable[[dict[str, Any]], None],
 ) -> tuple[str, str | None]:
-    """Run ``llm.generate_stream`` while pushing each token to the writer.
+    """Stream tokens to ``writer``; returns ``(answer, error_or_none)``.
 
-    Returns ``(answer, error_message)``. The writer is a no-op when the graph
-    is invoked outside a stream context (e.g. ``AgentRunner.run``); inside
-    ``graph.stream(stream_mode=["updates","custom"])`` each token surfaces as
-    a custom-mode payload that the API translates to an SSE ``token`` event.
+    ``writer`` is inactive outside ``graph.stream``; live SSE uses custom mode.
     """
     chunks: list[str] = []
     try:

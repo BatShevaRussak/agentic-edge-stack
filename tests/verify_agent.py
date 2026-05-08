@@ -176,7 +176,7 @@ def main(argv: list[str] | None = None) -> int:
     trace.section("AGENT GRAPH")
     runner = AgentRunner(retriever=retriever)
     try:
-        mermaid = render_mermaid(runner._graph)  # type: ignore[attr-defined]
+        mermaid = render_mermaid(runner.graph)
     except Exception as exc:  # noqa: BLE001
         mermaid = f"(mermaid rendering failed: {exc})"
     trace.write("Compiled LangGraph topology (Mermaid):")

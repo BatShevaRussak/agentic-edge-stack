@@ -92,4 +92,3 @@ def parse_route(raw_output: str) -> Route:
         return "rag" if text.find("RAG") < text.find("DIRECT") else "direct"
     return "direct"
 
-

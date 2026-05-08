@@ -1,7 +1,6 @@
 <#
 .SYNOPSIS
-    Imports a local GGUF model file into Ollama (offline alternative to `ollama pull`).
-
+    Imports a local GGUF file into Ollama (offline alternative to `ollama pull`).
 .DESCRIPTION
     Useful for air-gapped or offline deployments where `ollama pull` is
     not an option. The GGUF file is supplied manually, then this script:

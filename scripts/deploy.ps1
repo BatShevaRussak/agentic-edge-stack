@@ -44,6 +44,18 @@ if (-not (Get-Command ollama -ErrorAction SilentlyContinue)) {
 }
 Write-Host "  Ollama detected.`n" -ForegroundColor Green
 
+# Step 2.5: Ensure .env exists (Pydantic Settings looks for it).
+if (-not (Test-Path ".env")) {
+    if (Test-Path ".env.example") {
+        Copy-Item ".env.example" ".env"
+        Write-Host "  Created .env from .env.example.`n" -ForegroundColor Green
+    } else {
+        Write-Host "  WARNING: no .env or .env.example found - using code defaults.`n" -ForegroundColor Yellow
+    }
+} else {
+    Write-Host "  .env already exists - keeping it.`n" -ForegroundColor DarkGray
+}
+
 # Step 3: Create virtual environment
 Write-Host "[3/5] Setting up Python virtual environment..." -ForegroundColor Yellow
 if (-not (Test-Path "venv")) {

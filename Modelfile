@@ -1,21 +1,6 @@
-# Modelfile for Llama 3.2 1B Instruct (Q4_K_M).
-#
-# BEFORE running `ollama create`, make sure the GGUF file is in place:
-#   Run:  .\scripts\import_model.ps1
-#   (it copies the GGUF into models/ and then calls `ollama create` for you)
-#
-# To run manually:
-#   1. Place the GGUF at: models/llama-3.2-1b-instruct-q4_k_m.gguf
-#   2. Run: ollama create llama3.2:1b -f Modelfile
-#   3. Verify: ollama list  (should show llama3.2:1b ~770 MB)
-#
-# The chat template below mirrors Meta's official Llama 3.2 spec:
-#   https://www.llama.com/docs/model-cards-and-prompt-formats/llama3_2
-#
-# Why this file matters:
-#   - Correct conversation framing (system / user / assistant turns).
-#   - Reliable termination (model stops at <|eot_id|>, not mid-sentence).
-#   - Tool / function calling support in Part 3 (Agentic Orchestrator).
+# Llama 3.2 1B Instruct (Q4_K_M). Chat template + stops match Meta's spec:
+# https://www.llama.com/docs/model-cards-and-prompt-formats/llama3_2
+# Offline setup: place GGUF at models/llama-3.2-1b-instruct-q4_k_m.gguf or run .\scripts\import_model.ps1
 
 FROM ./models/llama-3.2-1b-instruct-q4_k_m.gguf
 

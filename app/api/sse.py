@@ -62,25 +62,11 @@ def langgraph_stream_to_sse(
     *,
     started_perf: float,
 ) -> Iterator[dict[str, str]]:
-    """Adapt LangGraph's tagged-tuple stream into SSE events.
+    """Map ``graph.stream(stream_mode=["updates","custom"])`` tuples to SSE dicts.
 
-    LangGraph yields ``(mode, payload)`` where ``mode`` is one of the
-    elements passed to ``stream_mode``. We listen for two:
-
-    * ``"updates"`` -> ``{node_name: state_delta}`` after each node.
-        - ``router``: emit ``route``.
-        - ``rag``: emit ``tool_call``.
-        - ``synthesis`` / ``direct`` / ``fallback``: collect for the final ``done``.
-    * ``"custom"`` -> the per-token dicts written by ``synthesis_node`` /
-      ``direct_node`` via ``get_stream_writer()`` -> emit ``token``.
-
-    The closing ``done`` is emitted by the caller (``routes.chat``) so it
-    can stamp ``total_elapsed_ms`` from its own ``started_perf``.
-
-    Args:
-        stream: The iterator returned by ``graph.stream(...)``.
-        started_perf: ``time.perf_counter()`` captured at request start;
-            included on every event as ``elapsed_ms``.
+    ``updates``: router/rag deltas become ``route`` / ``tool_call`` events and
+    merge into ``final_state``. ``custom``: token dicts from ``get_stream_writer``.
+    The caller emits ``done`` with ``total_elapsed_ms``.
     """
     final_state: dict[str, Any] = {}
 

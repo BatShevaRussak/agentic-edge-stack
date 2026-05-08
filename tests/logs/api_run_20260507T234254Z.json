@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-07T16:40:02.459026+00:00",
+  "timestamp": "2026-05-07T23:44:16.035538+00:00",
   "base_url": "http://127.0.0.1:8000",
   "queries": [
     {
@@ -15,15 +15,15 @@
           },
           "hits": 3,
           "top_score": 0.7647,
-          "tool_elapsed_ms": 95.83,
-          "elapsed_ms": 17445.48
+          "tool_elapsed_ms": 65.76,
+          "elapsed_ms": 3479.74
         }
       ],
-      "answer": "## Step 1: Identify the relevant information about the RAG pipeline's chunk size\nThe question specifically asks about the chunk size used in the RAG pipeline.\n\n## Step 2: Reference the provided text to confirm the answer\nAccording to [3] data/README.md, a common starting point for the chunk size is 300-700 characters with 10-15% overlap.\n\n## Step 3: Provide the final answer based on the information found in step 2.\nThe RAG pipeline uses a chunk size of approximately 300-700 characters, which means it has an overlap of 10-15%.\n\nThe final answer is: $\\boxed{[1]}$",
-      "answer_chars": 567,
-      "num_tokens": 138,
-      "time_to_first_token_ms": 28301.78,
-      "total_elapsed_ms": 39619.83,
+      "answer": "## Chunk Size\nAccording to [3], the Ollama runtime, GGUF format, K-quants (Q4_K_M), Modelfile templating are used in `04_ollama_runtime.md`, and according to [2], a common starting point is 300-700 characters with 10-15% overlap.\n\n## Overlap\nThe chunk size for this RAG pipeline is not explicitly stated, but the provided information suggests that it should be between 300-700 characters with 10-15% overlap.",
+      "answer_chars": 408,
+      "num_tokens": 108,
+      "time_to_first_token_ms": 16387.78,
+      "total_elapsed_ms": 26557.51,
       "error": null,
       "events": [
         {
@@ -31,9 +31,9 @@
           "data": {
             "route": "rag",
             "method": "llm",
-            "elapsed_ms": 17347.83
+            "elapsed_ms": 3412.46
           },
-          "wall_elapsed_ms": 17350.33
+          "wall_elapsed_ms": 3415.53
         },
         {
           "event": "tool_call",
@@ -44,10 +44,10 @@
             },
             "hits": 3,
             "top_score": 0.7647,
-            "tool_elapsed_ms": 95.83,
-            "elapsed_ms": 17445.48
+            "tool_elapsed_ms": 65.76,
+            "elapsed_ms": 3479.74
           },
-          "wall_elapsed_ms": 17448.0
+          "wall_elapsed_ms": 3482.75
         },
         {
           "event": "token",
@@ -55,169 +55,29 @@
             "type": "token",
             "node": "synthesis",
             "value": "##",
-            "elapsed_ms": 28299.24
+            "elapsed_ms": 16384.74
           },
-          "wall_elapsed_ms": 28301.78
+          "wall_elapsed_ms": 16387.78
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " Step",
-            "elapsed_ms": 28382.84
+            "value": " Chunk",
+            "elapsed_ms": 16466.7
           },
-          "wall_elapsed_ms": 28385.36
+          "wall_elapsed_ms": 16469.78
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " ",
-            "elapsed_ms": 28460.87
+            "value": " Size",
+            "elapsed_ms": 16541.93
           },
-          "wall_elapsed_ms": 28463.32
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "1",
-            "elapsed_ms": 28546.67
-          },
-          "wall_elapsed_ms": 28549.17
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": ":",
-            "elapsed_ms": 28626.34
-          },
-          "wall_elapsed_ms": 28628.88
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " Identify",
-            "elapsed_ms": 28709.99
-          },
-          "wall_elapsed_ms": 28712.49
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " the",
-            "elapsed_ms": 28787.77
-          },
-          "wall_elapsed_ms": 28790.27
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " relevant",
-            "elapsed_ms": 28864.72
-          },
-          "wall_elapsed_ms": 28867.22
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " information",
-            "elapsed_ms": 28951.87
-          },
-          "wall_elapsed_ms": 28954.79
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " about",
-            "elapsed_ms": 29029.65
-          },
-          "wall_elapsed_ms": 29032.19
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " the",
-            "elapsed_ms": 29105.16
-          },
-          "wall_elapsed_ms": 29107.71
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " R",
-            "elapsed_ms": 29193.65
-          },
-          "wall_elapsed_ms": 29196.14
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "AG",
-            "elapsed_ms": 29273.34
-          },
-          "wall_elapsed_ms": 29275.83
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " pipeline",
-            "elapsed_ms": 29360.45
-          },
-          "wall_elapsed_ms": 29363.14
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "'s",
-            "elapsed_ms": 29442.68
-          },
-          "wall_elapsed_ms": 29445.19
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " chunk",
-            "elapsed_ms": 29530.79
-          },
-          "wall_elapsed_ms": 29533.32
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " size",
-            "elapsed_ms": 29622.07
-          },
-          "wall_elapsed_ms": 29624.59
+          "wall_elapsed_ms": 16545.18
         },
         {
           "event": "token",
@@ -225,299 +85,9 @@
             "type": "token",
             "node": "synthesis",
             "value": "\n",
-            "elapsed_ms": 29701.74
+            "elapsed_ms": 16625.62
           },
-          "wall_elapsed_ms": 29704.3
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "The",
-            "elapsed_ms": 29785.96
-          },
-          "wall_elapsed_ms": 29788.48
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " question",
-            "elapsed_ms": 29866.89
-          },
-          "wall_elapsed_ms": 29869.44
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " specifically",
-            "elapsed_ms": 29948.65
-          },
-          "wall_elapsed_ms": 29951.14
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " asks",
-            "elapsed_ms": 30038.38
-          },
-          "wall_elapsed_ms": 30040.93
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " about",
-            "elapsed_ms": 30119.42
-          },
-          "wall_elapsed_ms": 30121.95
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " the",
-            "elapsed_ms": 30202.35
-          },
-          "wall_elapsed_ms": 30204.85
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " chunk",
-            "elapsed_ms": 30280.76
-          },
-          "wall_elapsed_ms": 30283.26
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " size",
-            "elapsed_ms": 30371.98
-          },
-          "wall_elapsed_ms": 30374.51
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " used",
-            "elapsed_ms": 30463.26
-          },
-          "wall_elapsed_ms": 30465.8
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " in",
-            "elapsed_ms": 30554.03
-          },
-          "wall_elapsed_ms": 30556.55
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " the",
-            "elapsed_ms": 30636.53
-          },
-          "wall_elapsed_ms": 30639.06
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " R",
-            "elapsed_ms": 30720.39
-          },
-          "wall_elapsed_ms": 30722.9
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "AG",
-            "elapsed_ms": 30804.5
-          },
-          "wall_elapsed_ms": 30807.29
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " pipeline",
-            "elapsed_ms": 30883.82
-          },
-          "wall_elapsed_ms": 30886.32
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": ".\n\n",
-            "elapsed_ms": 30966.39
-          },
-          "wall_elapsed_ms": 30968.92
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "##",
-            "elapsed_ms": 31049.45
-          },
-          "wall_elapsed_ms": 31051.95
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " Step",
-            "elapsed_ms": 31129.88
-          },
-          "wall_elapsed_ms": 31132.4
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " ",
-            "elapsed_ms": 31213.27
-          },
-          "wall_elapsed_ms": 31216.09
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "2",
-            "elapsed_ms": 31294.44
-          },
-          "wall_elapsed_ms": 31296.96
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": ":",
-            "elapsed_ms": 31370.99
-          },
-          "wall_elapsed_ms": 31373.5
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " Reference",
-            "elapsed_ms": 31454.48
-          },
-          "wall_elapsed_ms": 31457.0
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " the",
-            "elapsed_ms": 31531.46
-          },
-          "wall_elapsed_ms": 31534.0
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " provided",
-            "elapsed_ms": 31606.79
-          },
-          "wall_elapsed_ms": 31609.28
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " text",
-            "elapsed_ms": 31694.54
-          },
-          "wall_elapsed_ms": 31697.2
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " to",
-            "elapsed_ms": 31774.31
-          },
-          "wall_elapsed_ms": 31776.83
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " confirm",
-            "elapsed_ms": 31859.02
-          },
-          "wall_elapsed_ms": 31861.49
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " the",
-            "elapsed_ms": 31932.17
-          },
-          "wall_elapsed_ms": 31934.7
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " answer",
-            "elapsed_ms": 32006.53
-          },
-          "wall_elapsed_ms": 32009.07
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "\n",
-            "elapsed_ms": 32090.65
-          },
-          "wall_elapsed_ms": 32093.2
+          "wall_elapsed_ms": 16628.84
         },
         {
           "event": "token",
@@ -525,9 +95,9 @@
             "type": "token",
             "node": "synthesis",
             "value": "According",
-            "elapsed_ms": 32169.49
+            "elapsed_ms": 16708.81
           },
-          "wall_elapsed_ms": 32171.98
+          "wall_elapsed_ms": 16711.88
         },
         {
           "event": "token",
@@ -535,9 +105,9 @@
             "type": "token",
             "node": "synthesis",
             "value": " to",
-            "elapsed_ms": 32259.28
+            "elapsed_ms": 16787.71
           },
-          "wall_elapsed_ms": 32261.77
+          "wall_elapsed_ms": 16790.75
         },
         {
           "event": "token",
@@ -545,9 +115,9 @@
             "type": "token",
             "node": "synthesis",
             "value": " [",
-            "elapsed_ms": 32341.53
+            "elapsed_ms": 16869.18
           },
-          "wall_elapsed_ms": 32344.06
+          "wall_elapsed_ms": 16872.18
         },
         {
           "event": "token",
@@ -555,59 +125,69 @@
             "type": "token",
             "node": "synthesis",
             "value": "3",
-            "elapsed_ms": 32422.7
+            "elapsed_ms": 16947.81
           },
-          "wall_elapsed_ms": 32425.23
+          "wall_elapsed_ms": 16950.84
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "]",
-            "elapsed_ms": 32501.12
+            "value": "],",
+            "elapsed_ms": 17024.99
           },
-          "wall_elapsed_ms": 32503.63
+          "wall_elapsed_ms": 17028.2
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " data",
-            "elapsed_ms": 32584.95
+            "value": " the",
+            "elapsed_ms": 17101.47
           },
-          "wall_elapsed_ms": 32587.5
+          "wall_elapsed_ms": 17104.51
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "/",
-            "elapsed_ms": 32669.14
+            "value": " O",
+            "elapsed_ms": 17187.31
           },
-          "wall_elapsed_ms": 32671.97
+          "wall_elapsed_ms": 17190.33
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "README",
-            "elapsed_ms": 32749.22
+            "value": "ll",
+            "elapsed_ms": 17266.26
           },
-          "wall_elapsed_ms": 32751.71
+          "wall_elapsed_ms": 17269.26
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": ".md",
-            "elapsed_ms": 32827.75
+            "value": "ama",
+            "elapsed_ms": 17353.41
           },
-          "wall_elapsed_ms": 32830.31
+          "wall_elapsed_ms": 17356.45
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " runtime",
+            "elapsed_ms": 17432.72
+          },
+          "wall_elapsed_ms": 17435.74
         },
         {
           "event": "token",
@@ -615,369 +195,209 @@
             "type": "token",
             "node": "synthesis",
             "value": ",",
-            "elapsed_ms": 32911.77
+            "elapsed_ms": 17512.57
           },
-          "wall_elapsed_ms": 32914.25
+          "wall_elapsed_ms": 17515.6
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " a",
-            "elapsed_ms": 32993.48
+            "value": " GG",
+            "elapsed_ms": 17590.91
           },
-          "wall_elapsed_ms": 32995.98
+          "wall_elapsed_ms": 17594.27
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " common",
-            "elapsed_ms": 33084.44
+            "value": "UF",
+            "elapsed_ms": 17669.88
           },
-          "wall_elapsed_ms": 33086.98
+          "wall_elapsed_ms": 17672.89
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " starting",
-            "elapsed_ms": 33163.44
+            "value": " format",
+            "elapsed_ms": 17746.72
           },
-          "wall_elapsed_ms": 33165.96
+          "wall_elapsed_ms": 17749.75
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " point",
-            "elapsed_ms": 33243.73
+            "value": ",",
+            "elapsed_ms": 17824.65
           },
-          "wall_elapsed_ms": 33246.24
+          "wall_elapsed_ms": 17828.15
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " for",
-            "elapsed_ms": 33325.57
+            "value": " K",
+            "elapsed_ms": 17902.1
           },
-          "wall_elapsed_ms": 33328.11
+          "wall_elapsed_ms": 17905.1
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " the",
-            "elapsed_ms": 33403.38
+            "value": "-qu",
+            "elapsed_ms": 17978.35
           },
-          "wall_elapsed_ms": 33405.92
+          "wall_elapsed_ms": 17981.42
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " chunk",
-            "elapsed_ms": 33491.44
+            "value": "ants",
+            "elapsed_ms": 18062.57
           },
-          "wall_elapsed_ms": 33494.23
+          "wall_elapsed_ms": 18065.59
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " size",
-            "elapsed_ms": 33572.38
+            "value": " (",
+            "elapsed_ms": 18147.55
           },
-          "wall_elapsed_ms": 33574.88
+          "wall_elapsed_ms": 18150.71
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " is",
-            "elapsed_ms": 33650.87
+            "value": "Q",
+            "elapsed_ms": 18246.51
           },
-          "wall_elapsed_ms": 33653.54
+          "wall_elapsed_ms": 18249.53
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " ",
-            "elapsed_ms": 33733.1
+            "value": "4",
+            "elapsed_ms": 18346.5
           },
-          "wall_elapsed_ms": 33735.61
+          "wall_elapsed_ms": 18349.51
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "300",
-            "elapsed_ms": 33817.51
+            "value": "_K",
+            "elapsed_ms": 18449.25
           },
-          "wall_elapsed_ms": 33820.03
+          "wall_elapsed_ms": 18453.04
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "-",
-            "elapsed_ms": 33892.35
+            "value": "_M",
+            "elapsed_ms": 18546.08
           },
-          "wall_elapsed_ms": 33894.89
+          "wall_elapsed_ms": 18549.11
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "700",
-            "elapsed_ms": 33974.25
+            "value": "),",
+            "elapsed_ms": 18644.13
           },
-          "wall_elapsed_ms": 33976.78
+          "wall_elapsed_ms": 18647.12
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " characters",
-            "elapsed_ms": 34050.01
+            "value": " Mod",
+            "elapsed_ms": 18751.29
           },
-          "wall_elapsed_ms": 34052.58
+          "wall_elapsed_ms": 18754.23
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " with",
-            "elapsed_ms": 34162.99
+            "value": "elf",
+            "elapsed_ms": 18849.76
           },
-          "wall_elapsed_ms": 34165.51
+          "wall_elapsed_ms": 18852.82
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " ",
-            "elapsed_ms": 34241.75
+            "value": "ile",
+            "elapsed_ms": 18944.71
           },
-          "wall_elapsed_ms": 34244.28
+          "wall_elapsed_ms": 18947.74
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "10",
-            "elapsed_ms": 34327.28
+            "value": " templ",
+            "elapsed_ms": 19035.66
           },
-          "wall_elapsed_ms": 34329.76
+          "wall_elapsed_ms": 19038.64
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "-",
-            "elapsed_ms": 34407.41
+            "value": "ating",
+            "elapsed_ms": 19138.24
           },
-          "wall_elapsed_ms": 34409.94
+          "wall_elapsed_ms": 19142.72
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "15",
-            "elapsed_ms": 34483.81
+            "value": " are",
+            "elapsed_ms": 19242.36
           },
-          "wall_elapsed_ms": 34486.34
+          "wall_elapsed_ms": 19245.83
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "%",
-            "elapsed_ms": 34564.31
+            "value": " used",
+            "elapsed_ms": 19340.9
           },
-          "wall_elapsed_ms": 34566.83
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " overlap",
-            "elapsed_ms": 34641.3
-          },
-          "wall_elapsed_ms": 34643.86
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": ".\n\n",
-            "elapsed_ms": 34726.46
-          },
-          "wall_elapsed_ms": 34728.99
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "##",
-            "elapsed_ms": 34808.04
-          },
-          "wall_elapsed_ms": 34810.59
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " Step",
-            "elapsed_ms": 34890.47
-          },
-          "wall_elapsed_ms": 34893.0
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " ",
-            "elapsed_ms": 34970.57
-          },
-          "wall_elapsed_ms": 34973.11
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "3",
-            "elapsed_ms": 35048.36
-          },
-          "wall_elapsed_ms": 35050.92
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": ":",
-            "elapsed_ms": 35125.46
-          },
-          "wall_elapsed_ms": 35127.98
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " Provide",
-            "elapsed_ms": 35210.54
-          },
-          "wall_elapsed_ms": 35213.32
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " the",
-            "elapsed_ms": 35284.55
-          },
-          "wall_elapsed_ms": 35287.06
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " final",
-            "elapsed_ms": 35365.94
-          },
-          "wall_elapsed_ms": 35368.47
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " answer",
-            "elapsed_ms": 35444.72
-          },
-          "wall_elapsed_ms": 35447.24
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " based",
-            "elapsed_ms": 35524.42
-          },
-          "wall_elapsed_ms": 35526.92
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " on",
-            "elapsed_ms": 35609.53
-          },
-          "wall_elapsed_ms": 35612.02
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " the",
-            "elapsed_ms": 35689.15
-          },
-          "wall_elapsed_ms": 35691.61
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " information",
-            "elapsed_ms": 35774.84
-          },
-          "wall_elapsed_ms": 35777.36
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " found",
-            "elapsed_ms": 35848.31
-          },
-          "wall_elapsed_ms": 35850.88
+          "wall_elapsed_ms": 19344.04
         },
         {
           "event": "token",
@@ -985,29 +405,129 @@
             "type": "token",
             "node": "synthesis",
             "value": " in",
-            "elapsed_ms": 35928.76
+            "elapsed_ms": 19438.41
           },
-          "wall_elapsed_ms": 35931.34
+          "wall_elapsed_ms": 19443.95
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " step",
-            "elapsed_ms": 36009.75
+            "value": " `",
+            "elapsed_ms": 19528.59
           },
-          "wall_elapsed_ms": 36012.25
+          "wall_elapsed_ms": 19531.79
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " ",
-            "elapsed_ms": 36087.72
+            "value": "04",
+            "elapsed_ms": 19618.73
           },
-          "wall_elapsed_ms": 36090.25
+          "wall_elapsed_ms": 19621.71
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "_",
+            "elapsed_ms": 19704.36
+          },
+          "wall_elapsed_ms": 19707.33
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "oll",
+            "elapsed_ms": 19790.76
+          },
+          "wall_elapsed_ms": 19794.11
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "ama",
+            "elapsed_ms": 19882.02
+          },
+          "wall_elapsed_ms": 19885.2
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "_runtime",
+            "elapsed_ms": 19980.99
+          },
+          "wall_elapsed_ms": 19984.2
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": ".md",
+            "elapsed_ms": 20083.7
+          },
+          "wall_elapsed_ms": 20087.19
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "`,",
+            "elapsed_ms": 20186.6
+          },
+          "wall_elapsed_ms": 20189.64
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " and",
+            "elapsed_ms": 20282.46
+          },
+          "wall_elapsed_ms": 20285.66
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " according",
+            "elapsed_ms": 20377.31
+          },
+          "wall_elapsed_ms": 20380.46
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " to",
+            "elapsed_ms": 20469.31
+          },
+          "wall_elapsed_ms": 20472.35
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " [",
+            "elapsed_ms": 20554.47
+          },
+          "wall_elapsed_ms": 20557.54
         },
         {
           "event": "token",
@@ -1015,69 +535,19 @@
             "type": "token",
             "node": "synthesis",
             "value": "2",
-            "elapsed_ms": 36168.39
+            "elapsed_ms": 20638.17
           },
-          "wall_elapsed_ms": 36171.72
+          "wall_elapsed_ms": 20643.39
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": ".\n",
-            "elapsed_ms": 36252.62
+            "value": "],",
+            "elapsed_ms": 20718.94
           },
-          "wall_elapsed_ms": 36255.15
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "The",
-            "elapsed_ms": 36336.22
-          },
-          "wall_elapsed_ms": 36338.74
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " R",
-            "elapsed_ms": 36417.48
-          },
-          "wall_elapsed_ms": 36420.01
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "AG",
-            "elapsed_ms": 36498.84
-          },
-          "wall_elapsed_ms": 36501.36
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " pipeline",
-            "elapsed_ms": 36579.33
-          },
-          "wall_elapsed_ms": 36581.81
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " uses",
-            "elapsed_ms": 36663.33
-          },
-          "wall_elapsed_ms": 36665.84
+          "wall_elapsed_ms": 20721.97
         },
         {
           "event": "token",
@@ -1085,259 +555,39 @@
             "type": "token",
             "node": "synthesis",
             "value": " a",
-            "elapsed_ms": 36750.68
+            "elapsed_ms": 20799.58
           },
-          "wall_elapsed_ms": 36753.17
+          "wall_elapsed_ms": 20802.64
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " chunk",
-            "elapsed_ms": 36835.61
+            "value": " common",
+            "elapsed_ms": 20892.75
           },
-          "wall_elapsed_ms": 36838.1
+          "wall_elapsed_ms": 20896.25
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " size",
-            "elapsed_ms": 36917.49
+            "value": " starting",
+            "elapsed_ms": 20997.05
           },
-          "wall_elapsed_ms": 36919.98
+          "wall_elapsed_ms": 21000.16
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " of",
-            "elapsed_ms": 36998.58
+            "value": " point",
+            "elapsed_ms": 21098.89
           },
-          "wall_elapsed_ms": 37004.64
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " approximately",
-            "elapsed_ms": 37079.48
-          },
-          "wall_elapsed_ms": 37082.01
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " ",
-            "elapsed_ms": 37156.11
-          },
-          "wall_elapsed_ms": 37158.67
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "300",
-            "elapsed_ms": 37241.0
-          },
-          "wall_elapsed_ms": 37243.54
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "-",
-            "elapsed_ms": 37322.03
-          },
-          "wall_elapsed_ms": 37324.53
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "700",
-            "elapsed_ms": 37400.8
-          },
-          "wall_elapsed_ms": 37403.33
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " characters",
-            "elapsed_ms": 37481.49
-          },
-          "wall_elapsed_ms": 37483.99
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": ",",
-            "elapsed_ms": 37565.63
-          },
-          "wall_elapsed_ms": 37568.19
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " which",
-            "elapsed_ms": 37648.26
-          },
-          "wall_elapsed_ms": 37650.8
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " means",
-            "elapsed_ms": 37726.92
-          },
-          "wall_elapsed_ms": 37729.48
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " it",
-            "elapsed_ms": 37810.86
-          },
-          "wall_elapsed_ms": 37813.35
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " has",
-            "elapsed_ms": 37897.45
-          },
-          "wall_elapsed_ms": 37899.97
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " an",
-            "elapsed_ms": 37974.21
-          },
-          "wall_elapsed_ms": 37976.85
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " overlap",
-            "elapsed_ms": 38064.81
-          },
-          "wall_elapsed_ms": 38067.32
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " of",
-            "elapsed_ms": 38140.88
-          },
-          "wall_elapsed_ms": 38143.41
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " ",
-            "elapsed_ms": 38225.04
-          },
-          "wall_elapsed_ms": 38227.58
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "10",
-            "elapsed_ms": 38311.67
-          },
-          "wall_elapsed_ms": 38314.17
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "-",
-            "elapsed_ms": 38388.89
-          },
-          "wall_elapsed_ms": 38391.44
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "15",
-            "elapsed_ms": 38470.91
-          },
-          "wall_elapsed_ms": 38473.44
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "%.\n\n",
-            "elapsed_ms": 38546.73
-          },
-          "wall_elapsed_ms": 38549.25
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": "The",
-            "elapsed_ms": 38627.1
-          },
-          "wall_elapsed_ms": 38629.61
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " final",
-            "elapsed_ms": 38711.03
-          },
-          "wall_elapsed_ms": 38713.73
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "synthesis",
-            "value": " answer",
-            "elapsed_ms": 38793.56
-          },
-          "wall_elapsed_ms": 38796.08
+          "wall_elapsed_ms": 21102.28
         },
         {
           "event": "token",
@@ -1345,95 +595,545 @@
             "type": "token",
             "node": "synthesis",
             "value": " is",
-            "elapsed_ms": 38877.19
+            "elapsed_ms": 21187.04
           },
-          "wall_elapsed_ms": 38879.76
+          "wall_elapsed_ms": 21190.2
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": ":",
-            "elapsed_ms": 38958.72
+            "value": " ",
+            "elapsed_ms": 21279.46
           },
-          "wall_elapsed_ms": 38961.22
+          "wall_elapsed_ms": 21282.64
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": " $\\",
-            "elapsed_ms": 39039.83
+            "value": "300",
+            "elapsed_ms": 21376.48
           },
-          "wall_elapsed_ms": 39042.32
+          "wall_elapsed_ms": 21379.86
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "boxed",
-            "elapsed_ms": 39125.45
+            "value": "-",
+            "elapsed_ms": 21479.46
           },
-          "wall_elapsed_ms": 39127.98
+          "wall_elapsed_ms": 21482.44
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "{",
-            "elapsed_ms": 39204.66
+            "value": "700",
+            "elapsed_ms": 21576.3
           },
-          "wall_elapsed_ms": 39207.2
+          "wall_elapsed_ms": 21579.64
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "[",
-            "elapsed_ms": 39288.28
+            "value": " characters",
+            "elapsed_ms": 21675.04
           },
-          "wall_elapsed_ms": 39290.74
+          "wall_elapsed_ms": 21678.29
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "1",
-            "elapsed_ms": 39370.02
+            "value": " with",
+            "elapsed_ms": 21770.03
           },
-          "wall_elapsed_ms": 39372.54
+          "wall_elapsed_ms": 21773.02
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "]}",
-            "elapsed_ms": 39452.72
+            "value": " ",
+            "elapsed_ms": 21867.27
           },
-          "wall_elapsed_ms": 39455.29
+          "wall_elapsed_ms": 21870.19
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "synthesis",
-            "value": "$",
-            "elapsed_ms": 39538.26
+            "value": "10",
+            "elapsed_ms": 21967.39
           },
-          "wall_elapsed_ms": 39540.8
+          "wall_elapsed_ms": 21970.37
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "-",
+            "elapsed_ms": 22059.35
+          },
+          "wall_elapsed_ms": 22062.55
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "15",
+            "elapsed_ms": 22154.81
+          },
+          "wall_elapsed_ms": 22161.18
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "%",
+            "elapsed_ms": 22281.66
+          },
+          "wall_elapsed_ms": 22284.61
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " overlap",
+            "elapsed_ms": 22435.94
+          },
+          "wall_elapsed_ms": 22438.91
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": ".\n\n",
+            "elapsed_ms": 22574.31
+          },
+          "wall_elapsed_ms": 22577.24
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "##",
+            "elapsed_ms": 22710.36
+          },
+          "wall_elapsed_ms": 22713.32
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " Over",
+            "elapsed_ms": 22813.31
+          },
+          "wall_elapsed_ms": 22816.38
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "lap",
+            "elapsed_ms": 22967.16
+          },
+          "wall_elapsed_ms": 22970.16
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "\n",
+            "elapsed_ms": 23069.19
+          },
+          "wall_elapsed_ms": 23072.15
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "The",
+            "elapsed_ms": 23170.16
+          },
+          "wall_elapsed_ms": 23173.35
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " chunk",
+            "elapsed_ms": 23269.81
+          },
+          "wall_elapsed_ms": 23272.78
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " size",
+            "elapsed_ms": 23366.47
+          },
+          "wall_elapsed_ms": 23369.53
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " for",
+            "elapsed_ms": 23465.96
+          },
+          "wall_elapsed_ms": 23469.14
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " this",
+            "elapsed_ms": 23563.23
+          },
+          "wall_elapsed_ms": 23566.47
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " R",
+            "elapsed_ms": 23661.23
+          },
+          "wall_elapsed_ms": 23664.39
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "AG",
+            "elapsed_ms": 23744.64
+          },
+          "wall_elapsed_ms": 23747.63
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " pipeline",
+            "elapsed_ms": 23831.56
+          },
+          "wall_elapsed_ms": 23834.62
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " is",
+            "elapsed_ms": 23927.4
+          },
+          "wall_elapsed_ms": 23930.48
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " not",
+            "elapsed_ms": 24014.63
+          },
+          "wall_elapsed_ms": 24017.71
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " explicitly",
+            "elapsed_ms": 24102.33
+          },
+          "wall_elapsed_ms": 24105.32
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " stated",
+            "elapsed_ms": 24192.77
+          },
+          "wall_elapsed_ms": 24195.77
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": ",",
+            "elapsed_ms": 24279.37
+          },
+          "wall_elapsed_ms": 24282.6
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " but",
+            "elapsed_ms": 24370.16
+          },
+          "wall_elapsed_ms": 24373.12
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " the",
+            "elapsed_ms": 24456.04
+          },
+          "wall_elapsed_ms": 24459.19
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " provided",
+            "elapsed_ms": 24540.76
+          },
+          "wall_elapsed_ms": 24543.75
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " information",
+            "elapsed_ms": 24630.77
+          },
+          "wall_elapsed_ms": 24633.86
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " suggests",
+            "elapsed_ms": 24729.79
+          },
+          "wall_elapsed_ms": 24732.94
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " that",
+            "elapsed_ms": 24812.4
+          },
+          "wall_elapsed_ms": 24815.39
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " it",
+            "elapsed_ms": 24900.66
+          },
+          "wall_elapsed_ms": 24903.69
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " should",
+            "elapsed_ms": 25003.36
+          },
+          "wall_elapsed_ms": 25006.5
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " be",
+            "elapsed_ms": 25091.57
+          },
+          "wall_elapsed_ms": 25095.35
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " between",
+            "elapsed_ms": 25201.33
+          },
+          "wall_elapsed_ms": 25204.37
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " ",
+            "elapsed_ms": 25304.3
+          },
+          "wall_elapsed_ms": 25307.92
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "300",
+            "elapsed_ms": 25404.73
+          },
+          "wall_elapsed_ms": 25414.59
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "-",
+            "elapsed_ms": 25506.85
+          },
+          "wall_elapsed_ms": 25509.9
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "700",
+            "elapsed_ms": 25609.29
+          },
+          "wall_elapsed_ms": 25612.42
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " characters",
+            "elapsed_ms": 25710.83
+          },
+          "wall_elapsed_ms": 25714.73
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " with",
+            "elapsed_ms": 25808.92
+          },
+          "wall_elapsed_ms": 25811.95
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " ",
+            "elapsed_ms": 25907.52
+          },
+          "wall_elapsed_ms": 25911.02
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "10",
+            "elapsed_ms": 26004.47
+          },
+          "wall_elapsed_ms": 26010.44
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "-",
+            "elapsed_ms": 26103.72
+          },
+          "wall_elapsed_ms": 26106.74
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "15",
+            "elapsed_ms": 26197.51
+          },
+          "wall_elapsed_ms": 26200.68
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": "%",
+            "elapsed_ms": 26291.61
+          },
+          "wall_elapsed_ms": 26294.79
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": " overlap",
+            "elapsed_ms": 26386.95
+          },
+          "wall_elapsed_ms": 26389.94
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "synthesis",
+            "value": ".",
+            "elapsed_ms": 26474.22
+          },
+          "wall_elapsed_ms": 26477.47
         },
         {
           "event": "done",
           "data": {
             "route": "rag",
-            "answer": "## Step 1: Identify the relevant information about the RAG pipeline's chunk size\nThe question specifically asks about the chunk size used in the RAG pipeline.\n\n## Step 2: Reference the provided text to confirm the answer\nAccording to [3] data/README.md, a common starting point for the chunk size is 300-700 characters with 10-15% overlap.\n\n## Step 3: Provide the final answer based on the information found in step 2.\nThe RAG pipeline uses a chunk size of approximately 300-700 characters, which means it has an overlap of 10-15%.\n\nThe final answer is: $\\boxed{[1]}$",
+            "answer": "## Chunk Size\nAccording to [3], the Ollama runtime, GGUF format, K-quants (Q4_K_M), Modelfile templating are used in `04_ollama_runtime.md`, and according to [2], a common starting point is 300-700 characters with 10-15% overlap.\n\n## Overlap\nThe chunk size for this RAG pipeline is not explicitly stated, but the provided information suggests that it should be between 300-700 characters with 10-15% overlap.",
             "tool_calls": [
               {
                 "name": "rag_search",
@@ -1463,57 +1163,57 @@
                     }
                   ]
                 },
-                "elapsed_ms": 95.83,
+                "elapsed_ms": 65.76,
                 "error": null
               }
             ],
             "trace": [
               {
                 "node": "router",
-                "timestamp": "2026-05-07T16:38:58.871082+00:00",
-                "elapsed_ms": 17338.58,
+                "timestamp": "2026-05-07T23:42:57.147694+00:00",
+                "elapsed_ms": 3402.54,
                 "inputs": {
                   "query": "What chunk size does this RAG pipeline use, and what is the overlap?",
-                  "prompt_chars": 1288
+                  "prompt_chars": 1225
                 },
                 "outputs": {
                   "method": "llm",
                   "raw_output": "RAG",
                   "decided_route": "rag",
-                  "elapsed_ms": 17338.58
+                  "elapsed_ms": 3402.54
                 }
               },
               {
                 "node": "rag_search",
-                "timestamp": "2026-05-07T16:39:16.211624+00:00",
-                "elapsed_ms": 95.86,
+                "timestamp": "2026-05-07T23:43:00.551980+00:00",
+                "elapsed_ms": 65.81,
                 "inputs": {
                   "query": "What chunk size does this RAG pipeline use, and what is the overlap?"
                 },
                 "outputs": {
                   "hits_count": 3,
                   "top_score": 0.7646585702896118,
-                  "elapsed_ms": 95.86
+                  "elapsed_ms": 65.81
                 }
               },
               {
                 "node": "synthesis",
-                "timestamp": "2026-05-07T16:39:16.309305+00:00",
-                "elapsed_ms": 22171.78,
+                "timestamp": "2026-05-07T23:43:00.619364+00:00",
+                "elapsed_ms": 23073.65,
                 "inputs": {
                   "prompt_chars": 1080,
                   "num_hits": 3
                 },
                 "outputs": {
-                  "answer_chars": 567,
+                  "answer_chars": 408,
                   "error": null,
-                  "elapsed_ms": 22171.78
+                  "elapsed_ms": 23073.65
                 }
               }
             ],
-            "total_elapsed_ms": 39619.83
+            "total_elapsed_ms": 26557.51
           },
-          "wall_elapsed_ms": 39622.42
+          "wall_elapsed_ms": 26564.81
         }
       ]
     },
@@ -1521,113 +1221,23 @@
       "query": "What is 17 multiplied by 24?",
       "expected_route": "direct",
       "actual_route": "direct",
-      "routing_method": "heuristic",
+      "routing_method": "llm",
       "tool_calls": [],
-      "answer": "To find the answer, I'll multiply 17 and 24 together: \n\n17 * 24 = 408",
-      "answer_chars": 69,
-      "num_tokens": 23,
-      "time_to_first_token_ms": 3951.66,
-      "total_elapsed_ms": 6061.59,
+      "answer": "17 * 24 = 408",
+      "answer_chars": 13,
+      "num_tokens": 7,
+      "time_to_first_token_ms": 17204.07,
+      "total_elapsed_ms": 17781.96,
       "error": null,
       "events": [
         {
           "event": "route",
           "data": {
             "route": "direct",
-            "method": "heuristic",
-            "elapsed_ms": 4.24
+            "method": "llm",
+            "elapsed_ms": 12794.95
           },
-          "wall_elapsed_ms": 6.13
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": "To",
-            "elapsed_ms": 3949.67
-          },
-          "wall_elapsed_ms": 3951.66
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " find",
-            "elapsed_ms": 4025.16
-          },
-          "wall_elapsed_ms": 4027.21
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " the",
-            "elapsed_ms": 4099.82
-          },
-          "wall_elapsed_ms": 4101.9
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " answer",
-            "elapsed_ms": 4171.31
-          },
-          "wall_elapsed_ms": 4173.53
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": ",",
-            "elapsed_ms": 4249.35
-          },
-          "wall_elapsed_ms": 4251.35
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " I",
-            "elapsed_ms": 4317.99
-          },
-          "wall_elapsed_ms": 4320.25
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": "'ll",
-            "elapsed_ms": 4435.62
-          },
-          "wall_elapsed_ms": 4437.72
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " multiply",
-            "elapsed_ms": 4519.27
-          },
-          "wall_elapsed_ms": 4521.11
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " ",
-            "elapsed_ms": 4668.9
-          },
-          "wall_elapsed_ms": 4670.73
+          "wall_elapsed_ms": 12796.74
         },
         {
           "event": "token",
@@ -1635,79 +1245,9 @@
             "type": "token",
             "node": "direct",
             "value": "17",
-            "elapsed_ms": 4816.71
+            "elapsed_ms": 17202.0
           },
-          "wall_elapsed_ms": 4907.17
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " and",
-            "elapsed_ms": 4944.76
-          },
-          "wall_elapsed_ms": 4956.15
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " ",
-            "elapsed_ms": 5068.86
-          },
-          "wall_elapsed_ms": 5070.7
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": "24",
-            "elapsed_ms": 5162.19
-          },
-          "wall_elapsed_ms": 5164.09
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " together",
-            "elapsed_ms": 5305.87
-          },
-          "wall_elapsed_ms": 5307.84
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": ":",
-            "elapsed_ms": 5377.07
-          },
-          "wall_elapsed_ms": 5379.07
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " \n\n",
-            "elapsed_ms": 5451.76
-          },
-          "wall_elapsed_ms": 5454.18
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": "17",
-            "elapsed_ms": 5528.12
-          },
-          "wall_elapsed_ms": 5530.16
+          "wall_elapsed_ms": 17204.07
         },
         {
           "event": "token",
@@ -1715,9 +1255,9 @@
             "type": "token",
             "node": "direct",
             "value": " *",
-            "elapsed_ms": 5599.65
+            "elapsed_ms": 17295.67
           },
-          "wall_elapsed_ms": 5601.66
+          "wall_elapsed_ms": 17297.78
         },
         {
           "event": "token",
@@ -1725,9 +1265,9 @@
             "type": "token",
             "node": "direct",
             "value": " ",
-            "elapsed_ms": 5679.74
+            "elapsed_ms": 17385.05
           },
-          "wall_elapsed_ms": 5681.74
+          "wall_elapsed_ms": 17387.05
         },
         {
           "event": "token",
@@ -1735,9 +1275,9 @@
             "type": "token",
             "node": "direct",
             "value": "24",
-            "elapsed_ms": 5751.15
+            "elapsed_ms": 17465.12
           },
-          "wall_elapsed_ms": 5753.77
+          "wall_elapsed_ms": 17467.07
         },
         {
           "event": "token",
@@ -1745,9 +1285,9 @@
             "type": "token",
             "node": "direct",
             "value": " =",
-            "elapsed_ms": 5829.93
+            "elapsed_ms": 17548.86
           },
-          "wall_elapsed_ms": 5831.81
+          "wall_elapsed_ms": 17551.12
         },
         {
           "event": "token",
@@ -1755,9 +1295,9 @@
             "type": "token",
             "node": "direct",
             "value": " ",
-            "elapsed_ms": 5908.3
+            "elapsed_ms": 17626.66
           },
-          "wall_elapsed_ms": 5910.26
+          "wall_elapsed_ms": 17628.49
         },
         {
           "event": "token",
@@ -1765,48 +1305,50 @@
             "type": "token",
             "node": "direct",
             "value": "408",
-            "elapsed_ms": 5982.84
+            "elapsed_ms": 17704.1
           },
-          "wall_elapsed_ms": 5984.75
+          "wall_elapsed_ms": 17706.06
         },
         {
           "event": "done",
           "data": {
             "route": "direct",
-            "answer": "To find the answer, I'll multiply 17 and 24 together: \n\n17 * 24 = 408",
+            "answer": "17 * 24 = 408",
             "tool_calls": [],
             "trace": [
               {
                 "node": "router",
-                "timestamp": "2026-05-07T16:39:38.492420+00:00",
-                "elapsed_ms": 0.04,
+                "timestamp": "2026-05-07T23:43:23.705380+00:00",
+                "elapsed_ms": 12791.96,
                 "inputs": {
-                  "query": "What is 17 multiplied by 24?"
+                  "query": "What is 17 multiplied by 24?",
+                  "prompt_chars": 1185
                 },
                 "outputs": {
-                  "method": "heuristic",
+                  "method": "llm",
+                  "raw_output": "DIRECT",
                   "decided_route": "direct",
-                  "elapsed_ms": 0.04
+                  "elapsed_ms": 12791.96
                 }
               },
               {
                 "node": "direct",
-                "timestamp": "2026-05-07T16:39:38.494547+00:00",
-                "elapsed_ms": 6054.39,
+                "timestamp": "2026-05-07T23:43:36.499032+00:00",
+                "elapsed_ms": 4984.49,
                 "inputs": {
                   "query": "What is 17 multiplied by 24?",
                   "prompt_chars": 240
                 },
                 "outputs": {
-                  "answer_chars": 69,
+                  "answer_chars": 13,
                   "error": null,
-                  "elapsed_ms": 6054.39
+                  "elapsed_ms": 4984.49
                 }
               }
             ],
-            "total_elapsed_ms": 6061.59
+            "total_elapsed_ms": 17781.96
           },
-          "wall_elapsed_ms": 6063.49
+          "wall_elapsed_ms": 17783.96
         }
       ]
     },
@@ -1814,23 +1356,23 @@
       "query": "Who are you?",
       "expected_route": "direct",
       "actual_route": "direct",
-      "routing_method": "heuristic",
+      "routing_method": "llm",
       "tool_calls": [],
-      "answer": "I'm an artificial intelligence designed to assist and communicate with users in a helpful and informative way. I don't have personal characteristics or emotions like humans do, but I'm here to provide quick answers and guidance when needed.",
-      "answer_chars": 240,
-      "num_tokens": 44,
-      "time_to_first_token_ms": 2664.51,
-      "total_elapsed_ms": 5931.91,
+      "answer": "I'm an assistant here to help answer your questions and provide assistance with any task or topic you'd like to discuss. I'll do my best to be concise and accurate in my responses. Is that clear?",
+      "answer_chars": 195,
+      "num_tokens": 42,
+      "time_to_first_token_ms": 17281.95,
+      "total_elapsed_ms": 20816.9,
       "error": null,
       "events": [
         {
           "event": "route",
           "data": {
             "route": "direct",
-            "method": "heuristic",
-            "elapsed_ms": 4.55
+            "method": "llm",
+            "elapsed_ms": 12683.48
           },
-          "wall_elapsed_ms": 6.47
+          "wall_elapsed_ms": 12685.09
         },
         {
           "event": "token",
@@ -1838,9 +1380,9 @@
             "type": "token",
             "node": "direct",
             "value": "I",
-            "elapsed_ms": 2662.48
+            "elapsed_ms": 17280.02
           },
-          "wall_elapsed_ms": 2664.51
+          "wall_elapsed_ms": 17281.95
         },
         {
           "event": "token",
@@ -1848,9 +1390,9 @@
             "type": "token",
             "node": "direct",
             "value": "'m",
-            "elapsed_ms": 2740.06
+            "elapsed_ms": 17357.22
           },
-          "wall_elapsed_ms": 2742.06
+          "wall_elapsed_ms": 17359.21
         },
         {
           "event": "token",
@@ -1858,319 +1400,19 @@
             "type": "token",
             "node": "direct",
             "value": " an",
-            "elapsed_ms": 2817.35
+            "elapsed_ms": 17430.25
           },
-          "wall_elapsed_ms": 2819.35
+          "wall_elapsed_ms": 17431.97
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "direct",
-            "value": " artificial",
-            "elapsed_ms": 2897.89
+            "value": " assistant",
+            "elapsed_ms": 17510.61
           },
-          "wall_elapsed_ms": 2900.31
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " intelligence",
-            "elapsed_ms": 2972.87
-          },
-          "wall_elapsed_ms": 2974.87
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " designed",
-            "elapsed_ms": 3044.16
-          },
-          "wall_elapsed_ms": 3046.07
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " to",
-            "elapsed_ms": 3121.72
-          },
-          "wall_elapsed_ms": 3123.75
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " assist",
-            "elapsed_ms": 3191.58
-          },
-          "wall_elapsed_ms": 3193.81
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " and",
-            "elapsed_ms": 3266.35
-          },
-          "wall_elapsed_ms": 3268.39
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " communicate",
-            "elapsed_ms": 3346.31
-          },
-          "wall_elapsed_ms": 3348.32
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " with",
-            "elapsed_ms": 3415.62
-          },
-          "wall_elapsed_ms": 3417.63
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " users",
-            "elapsed_ms": 3491.96
-          },
-          "wall_elapsed_ms": 3493.91
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " in",
-            "elapsed_ms": 3572.19
-          },
-          "wall_elapsed_ms": 3574.21
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " a",
-            "elapsed_ms": 3648.02
-          },
-          "wall_elapsed_ms": 3649.92
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " helpful",
-            "elapsed_ms": 3727.79
-          },
-          "wall_elapsed_ms": 3729.7
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " and",
-            "elapsed_ms": 3802.13
-          },
-          "wall_elapsed_ms": 3804.03
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " informative",
-            "elapsed_ms": 3874.54
-          },
-          "wall_elapsed_ms": 3876.66
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " way",
-            "elapsed_ms": 3950.44
-          },
-          "wall_elapsed_ms": 3952.58
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": ".",
-            "elapsed_ms": 4029.38
-          },
-          "wall_elapsed_ms": 4031.29
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " I",
-            "elapsed_ms": 4106.22
-          },
-          "wall_elapsed_ms": 4108.21
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " don",
-            "elapsed_ms": 4172.66
-          },
-          "wall_elapsed_ms": 4174.63
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": "'t",
-            "elapsed_ms": 4236.57
-          },
-          "wall_elapsed_ms": 4238.56
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " have",
-            "elapsed_ms": 4299.94
-          },
-          "wall_elapsed_ms": 4302.05
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " personal",
-            "elapsed_ms": 4365.68
-          },
-          "wall_elapsed_ms": 4367.54
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " characteristics",
-            "elapsed_ms": 4439.97
-          },
-          "wall_elapsed_ms": 4441.96
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " or",
-            "elapsed_ms": 4506.15
-          },
-          "wall_elapsed_ms": 4508.06
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " emotions",
-            "elapsed_ms": 4579.79
-          },
-          "wall_elapsed_ms": 4581.71
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " like",
-            "elapsed_ms": 4655.97
-          },
-          "wall_elapsed_ms": 4657.93
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " humans",
-            "elapsed_ms": 4740.89
-          },
-          "wall_elapsed_ms": 4742.69
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " do",
-            "elapsed_ms": 4822.09
-          },
-          "wall_elapsed_ms": 4824.03
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": ",",
-            "elapsed_ms": 4900.04
-          },
-          "wall_elapsed_ms": 4902.02
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " but",
-            "elapsed_ms": 4994.0
-          },
-          "wall_elapsed_ms": 4995.84
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": " I",
-            "elapsed_ms": 5071.83
-          },
-          "wall_elapsed_ms": 5073.81
-        },
-        {
-          "event": "token",
-          "data": {
-            "type": "token",
-            "node": "direct",
-            "value": "'m",
-            "elapsed_ms": 5140.82
-          },
-          "wall_elapsed_ms": 5142.71
+          "wall_elapsed_ms": 17512.61
         },
         {
           "event": "token",
@@ -2178,9 +1420,9 @@
             "type": "token",
             "node": "direct",
             "value": " here",
-            "elapsed_ms": 5218.43
+            "elapsed_ms": 17584.16
           },
-          "wall_elapsed_ms": 5220.45
+          "wall_elapsed_ms": 17585.86
         },
         {
           "event": "token",
@@ -2188,39 +1430,49 @@
             "type": "token",
             "node": "direct",
             "value": " to",
-            "elapsed_ms": 5279.61
+            "elapsed_ms": 17674.73
           },
-          "wall_elapsed_ms": 5281.61
+          "wall_elapsed_ms": 17676.73
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "direct",
-            "value": " provide",
-            "elapsed_ms": 5348.95
+            "value": " help",
+            "elapsed_ms": 17758.69
           },
-          "wall_elapsed_ms": 5350.93
+          "wall_elapsed_ms": 17760.33
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "direct",
-            "value": " quick",
-            "elapsed_ms": 5420.08
+            "value": " answer",
+            "elapsed_ms": 17846.06
           },
-          "wall_elapsed_ms": 5421.94
+          "wall_elapsed_ms": 17847.8
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "direct",
-            "value": " answers",
-            "elapsed_ms": 5494.68
+            "value": " your",
+            "elapsed_ms": 17923.97
           },
-          "wall_elapsed_ms": 5496.66
+          "wall_elapsed_ms": 17926.02
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " questions",
+            "elapsed_ms": 17999.1
+          },
+          "wall_elapsed_ms": 18000.84
         },
         {
           "event": "token",
@@ -2228,39 +1480,129 @@
             "type": "token",
             "node": "direct",
             "value": " and",
-            "elapsed_ms": 5571.3
+            "elapsed_ms": 18080.56
           },
-          "wall_elapsed_ms": 5573.84
+          "wall_elapsed_ms": 18082.5
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "direct",
-            "value": " guidance",
-            "elapsed_ms": 5655.55
+            "value": " provide",
+            "elapsed_ms": 18168.33
           },
-          "wall_elapsed_ms": 5657.57
+          "wall_elapsed_ms": 18170.23
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "direct",
-            "value": " when",
-            "elapsed_ms": 5729.34
+            "value": " assistance",
+            "elapsed_ms": 18260.71
           },
-          "wall_elapsed_ms": 5731.24
+          "wall_elapsed_ms": 18262.49
         },
         {
           "event": "token",
           "data": {
             "type": "token",
             "node": "direct",
-            "value": " needed",
-            "elapsed_ms": 5801.44
+            "value": " with",
+            "elapsed_ms": 18353.84
           },
-          "wall_elapsed_ms": 5803.37
+          "wall_elapsed_ms": 18358.67
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " any",
+            "elapsed_ms": 18441.6
+          },
+          "wall_elapsed_ms": 18443.86
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " task",
+            "elapsed_ms": 18520.64
+          },
+          "wall_elapsed_ms": 18525.11
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " or",
+            "elapsed_ms": 18613.33
+          },
+          "wall_elapsed_ms": 18614.95
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " topic",
+            "elapsed_ms": 18702.24
+          },
+          "wall_elapsed_ms": 18704.03
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " you",
+            "elapsed_ms": 18785.78
+          },
+          "wall_elapsed_ms": 18787.66
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": "'d",
+            "elapsed_ms": 18867.52
+          },
+          "wall_elapsed_ms": 18869.25
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " like",
+            "elapsed_ms": 18943.94
+          },
+          "wall_elapsed_ms": 18945.66
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " to",
+            "elapsed_ms": 19025.2
+          },
+          "wall_elapsed_ms": 19027.18
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " discuss",
+            "elapsed_ms": 19101.2
+          },
+          "wall_elapsed_ms": 19102.98
         },
         {
           "event": "token",
@@ -2268,48 +1610,230 @@
             "type": "token",
             "node": "direct",
             "value": ".",
-            "elapsed_ms": 5867.62
+            "elapsed_ms": 19183.53
           },
-          "wall_elapsed_ms": 5869.61
+          "wall_elapsed_ms": 19185.19
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " I",
+            "elapsed_ms": 19267.6
+          },
+          "wall_elapsed_ms": 19269.38
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": "'ll",
+            "elapsed_ms": 19346.97
+          },
+          "wall_elapsed_ms": 19348.78
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " do",
+            "elapsed_ms": 19435.93
+          },
+          "wall_elapsed_ms": 19437.78
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " my",
+            "elapsed_ms": 19537.61
+          },
+          "wall_elapsed_ms": 19541.37
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " best",
+            "elapsed_ms": 19633.01
+          },
+          "wall_elapsed_ms": 19634.87
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " to",
+            "elapsed_ms": 19719.02
+          },
+          "wall_elapsed_ms": 19720.86
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " be",
+            "elapsed_ms": 19797.2
+          },
+          "wall_elapsed_ms": 19799.29
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " concise",
+            "elapsed_ms": 19878.21
+          },
+          "wall_elapsed_ms": 19879.95
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " and",
+            "elapsed_ms": 19961.09
+          },
+          "wall_elapsed_ms": 19962.8
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " accurate",
+            "elapsed_ms": 20040.55
+          },
+          "wall_elapsed_ms": 20042.49
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " in",
+            "elapsed_ms": 20124.86
+          },
+          "wall_elapsed_ms": 20126.82
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " my",
+            "elapsed_ms": 20201.07
+          },
+          "wall_elapsed_ms": 20202.86
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " responses",
+            "elapsed_ms": 20278.57
+          },
+          "wall_elapsed_ms": 20280.47
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": ".",
+            "elapsed_ms": 20356.22
+          },
+          "wall_elapsed_ms": 20358.04
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " Is",
+            "elapsed_ms": 20439.79
+          },
+          "wall_elapsed_ms": 20441.79
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " that",
+            "elapsed_ms": 20526.34
+          },
+          "wall_elapsed_ms": 20527.96
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": " clear",
+            "elapsed_ms": 20622.99
+          },
+          "wall_elapsed_ms": 20624.93
+        },
+        {
+          "event": "token",
+          "data": {
+            "type": "token",
+            "node": "direct",
+            "value": "?",
+            "elapsed_ms": 20717.25
+          },
+          "wall_elapsed_ms": 20720.3
         },
         {
           "event": "done",
           "data": {
             "route": "direct",
-            "answer": "I'm an artificial intelligence designed to assist and communicate with users in a helpful and informative way. I don't have personal characteristics or emotions like humans do, but I'm here to provide quick answers and guidance when needed.",
+            "answer": "I'm an assistant here to help answer your questions and provide assistance with any task or topic you'd like to discuss. I'll do my best to be concise and accurate in my responses. Is that clear?",
             "tool_calls": [],
             "trace": [
               {
                 "node": "router",
-                "timestamp": "2026-05-07T16:39:44.558902+00:00",
-                "elapsed_ms": 0.02,
+                "timestamp": "2026-05-07T23:43:41.489898+00:00",
+                "elapsed_ms": 12680.44,
                 "inputs": {
-                  "query": "Who are you?"
+                  "query": "Who are you?",
+                  "prompt_chars": 1169
                 },
                 "outputs": {
-                  "method": "heuristic",
+                  "method": "llm",
+                  "raw_output": "DIRECT",
                   "decided_route": "direct",
-                  "elapsed_ms": 0.02
+                  "elapsed_ms": 12680.44
                 }
               },
               {
                 "node": "direct",
-                "timestamp": "2026-05-07T16:39:44.560754+00:00",
-                "elapsed_ms": 5924.63,
+                "timestamp": "2026-05-07T23:43:54.171725+00:00",
+                "elapsed_ms": 8130.87,
                 "inputs": {
                   "query": "Who are you?",
                   "prompt_chars": 224
                 },
                 "outputs": {
-                  "answer_chars": 240,
+                  "answer_chars": 195,
                   "error": null,
-                  "elapsed_ms": 5924.63
+                  "elapsed_ms": 8130.87
                 }
               }
             ],
-            "total_elapsed_ms": 5931.91
+            "total_elapsed_ms": 20816.9
           },
-          "wall_elapsed_ms": 5933.78
+          "wall_elapsed_ms": 20818.76
         }
       ]
     },
@@ -2326,15 +1850,15 @@
           },
           "hits": 0,
           "top_score": null,
-          "tool_elapsed_ms": 55.82,
-          "elapsed_ms": 11956.52
+          "tool_elapsed_ms": 58.81,
+          "elapsed_ms": 13717.96
         }
       ],
       "answer": "I don't have that information in my knowledge base.",
       "answer_chars": 51,
       "num_tokens": 1,
-      "time_to_first_token_ms": 11959.66,
-      "total_elapsed_ms": 11959.62,
+      "time_to_first_token_ms": 13723.94,
+      "total_elapsed_ms": 13723.82,
       "error": null,
       "events": [
         {
@@ -2342,9 +1866,9 @@
           "data": {
             "route": "rag",
             "method": "llm",
-            "elapsed_ms": 11899.23
+            "elapsed_ms": 13656.65
           },
-          "wall_elapsed_ms": 11901.08
+          "wall_elapsed_ms": 13658.93
         },
         {
           "event": "tool_call",
@@ -2355,10 +1879,10 @@
             },
             "hits": 0,
             "top_score": null,
-            "tool_elapsed_ms": 55.82,
-            "elapsed_ms": 11956.52
+            "tool_elapsed_ms": 58.81,
+            "elapsed_ms": 13717.96
           },
-          "wall_elapsed_ms": 11958.36
+          "wall_elapsed_ms": 13720.44
         },
         {
           "event": "token",
@@ -2366,9 +1890,9 @@
             "type": "token",
             "node": "fallback",
             "value": "I don't have that information in my knowledge base.",
-            "elapsed_ms": 11957.92
+            "elapsed_ms": 13722.0
           },
-          "wall_elapsed_ms": 11959.66
+          "wall_elapsed_ms": 13723.94
         },
         {
           "event": "done",
@@ -2385,55 +1909,55 @@
                   "query": "What is the recommended recipe for a chocolate cake?",
                   "hits": []
                 },
-                "elapsed_ms": 55.82,
+                "elapsed_ms": 58.81,
                 "error": null
               }
             ],
             "trace": [
               {
                 "node": "router",
-                "timestamp": "2026-05-07T16:39:50.493553+00:00",
-                "elapsed_ms": 11896.11,
+                "timestamp": "2026-05-07T23:44:02.314703+00:00",
+                "elapsed_ms": 13648.25,
                 "inputs": {
                   "query": "What is the recommended recipe for a chocolate cake?",
-                  "prompt_chars": 1272
+                  "prompt_chars": 1209
                 },
                 "outputs": {
                   "method": "llm",
                   "raw_output": "RAG",
                   "decided_route": "rag",
-                  "elapsed_ms": 11896.11
+                  "elapsed_ms": 13648.25
                 }
               },
               {
                 "node": "rag_search",
-                "timestamp": "2026-05-07T16:40:02.391217+00:00",
-                "elapsed_ms": 55.83,
+                "timestamp": "2026-05-07T23:44:15.965160+00:00",
+                "elapsed_ms": 58.82,
                 "inputs": {
                   "query": "What is the recommended recipe for a chocolate cake?"
                 },
                 "outputs": {
                   "hits_count": 0,
                   "top_score": null,
-                  "elapsed_ms": 55.83
+                  "elapsed_ms": 58.82
                 }
               },
               {
                 "node": "fallback",
-                "timestamp": "2026-05-07T16:40:02.448613+00:00",
-                "elapsed_ms": 0.01,
+                "timestamp": "2026-05-07T23:44:16.028602+00:00",
+                "elapsed_ms": 0.02,
                 "inputs": {
                   "reason": "no_hits_above_threshold"
                 },
                 "outputs": {
                   "answer": "I don't have that information in my knowledge base.",
-                  "elapsed_ms": 0.01
+                  "elapsed_ms": 0.02
                 }
               }
             ],
-            "total_elapsed_ms": 11959.62
+            "total_elapsed_ms": 13723.82
           },
-          "wall_elapsed_ms": 11961.45
+          "wall_elapsed_ms": 13726.18
         }
       ]
     }

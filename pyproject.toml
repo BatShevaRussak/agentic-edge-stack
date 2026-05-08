@@ -4,9 +4,6 @@ version = "0.1.0"
 description = "Locally hosted agentic AI assistant with RAG and streaming API"
 readme = "README.md"
 requires-python = ">=3.10"
-authors = [
-    { name = "Your Name" }
-]
 license = { text = "MIT" }
 
 dependencies = [

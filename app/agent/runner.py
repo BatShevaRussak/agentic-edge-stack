@@ -11,6 +11,8 @@ import time
 from dataclasses import asdict
 from typing import Any
 
+from langgraph.graph.state import CompiledStateGraph
+
 from app.agent.errors import AgentError
 from app.agent.graph import build_agent_graph
 from app.agent.types import AgentResponse, AgentState
@@ -46,6 +48,11 @@ class AgentRunner:
     @property
     def llm(self) -> OllamaClient:
         return self._llm
+
+    @property
+    def graph(self) -> CompiledStateGraph[AgentState, Any, Any, Any]:
+        """The compiled LangGraph (streaming via ``.stream``)."""
+        return self._graph
 
     def run(self, query: str) -> AgentResponse:
         """Run the agent on a single query.
